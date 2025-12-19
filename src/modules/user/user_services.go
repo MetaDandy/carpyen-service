@@ -9,10 +9,10 @@ import (
 )
 
 type UserService interface {
-	Create(input CreateUserDto) (*response.UserResponse, error)
-	FindByID(id string) (*response.UserResponse, error)
-	FindAll(opts *helper.FindAllOptions) (*helper.PaginatedResponse[response.UserResponse], error)
-	Update(id string, input UpdateUserDto) (*response.UserResponse, error)
+	Create(input CreateUserDto) (*response.User, error)
+	FindByID(id string) (*response.User, error)
+	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.User], error)
+	Update(id string, input UpdateUserDto) (*response.User, error)
 	Delete(id string) error
 }
 
@@ -24,7 +24,7 @@ func NewService(repo UserRepo) UserService {
 	return &Service{repo: repo}
 }
 
-func (s *Service) Create(input CreateUserDto) (*response.UserResponse, error) {
+func (s *Service) Create(input CreateUserDto) (*response.User, error) {
 	user := model.User{}
 	copier.Copy(user, input)
 	user.ID = uuid.New()
@@ -37,7 +37,7 @@ func (s *Service) Create(input CreateUserDto) (*response.UserResponse, error) {
 	return &dto, nil
 }
 
-func (s *Service) FindByID(id string) (*response.UserResponse, error) {
+func (s *Service) FindByID(id string) (*response.User, error) {
 	user, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (s *Service) FindByID(id string) (*response.UserResponse, error) {
 	return &dto, nil
 }
 
-func (s *Service) FindAll(opts *helper.FindAllOptions) (*helper.PaginatedResponse[response.UserResponse], error) {
+func (s *Service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.User], error) {
 	finded, total, err := s.repo.FindAll(opts)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *Service) FindAll(opts *helper.FindAllOptions) (*helper.PaginatedRespons
 	dtos := response.UserToListDto(finded)
 	pages := uint((total + int64(opts.Limit) - 1) / int64(opts.Limit))
 
-	return &helper.PaginatedResponse[response.UserResponse]{
+	return &response.Paginated[response.User]{
 		Data:   dtos,
 		Total:  total,
 		Limit:  opts.Limit,
@@ -64,7 +64,7 @@ func (s *Service) FindAll(opts *helper.FindAllOptions) (*helper.PaginatedRespons
 	}, nil
 }
 
-func (s *Service) Update(id string, input UpdateUserDto) (*response.UserResponse, error) {
+func (s *Service) Update(id string, input UpdateUserDto) (*response.User, error) {
 	user, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err

@@ -7,11 +7,11 @@ import (
 )
 
 type TaskResponse struct {
-	ID          string       `json:"id"`
-	Title       string       `json:"title"`
-	Description string       `json:"description"`
-	Status      string       `json:"status"`
-	User        UserResponse `json:"user"`
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Status      string `json:"status"`
+	User        User   `json:"user"`
 }
 
 func TaskToDto(m *model.Task) TaskResponse {
