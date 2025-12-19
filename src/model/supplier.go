@@ -24,3 +24,7 @@ type Supplier struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+func (Supplier) TableName() string {
+	return "supplier"
+}

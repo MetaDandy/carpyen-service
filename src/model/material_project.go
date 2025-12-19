@@ -16,3 +16,7 @@ type MaterialProject struct {
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
+
+func (MaterialProject) TableName() string {
+	return "material_project"
+}

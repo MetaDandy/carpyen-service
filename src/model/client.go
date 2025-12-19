@@ -8,11 +8,12 @@ import (
 )
 
 type Client struct {
-	ID      uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	Name    string
-	Email   string `gorm:"uniqueIndex"`
-	Phone   string
-	Address string
+	ID       uuid.UUID `gorm:"type:uuid;primaryKey;"`
+	Name     string
+	Email    string `gorm:"uniqueIndex"`
+	Phone    string
+	Address  string
+	Password string
 
 	Projects []Project `gorm:"foreignKey:ClientID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 

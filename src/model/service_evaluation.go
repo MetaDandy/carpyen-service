@@ -22,3 +22,7 @@ type ServiceEvaluation struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+func (ServiceEvaluation) TableName() string {
+	return "service_evaluation"
+}

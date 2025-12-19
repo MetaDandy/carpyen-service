@@ -23,3 +23,7 @@ type Material struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+func (Material) TableName() string {
+	return "material"
+}

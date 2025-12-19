@@ -32,3 +32,7 @@ type Schedule struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
+
+func (Schedule) TableName() string {
+	return "schedule"
+}
