@@ -2,8 +2,8 @@ package src
 
 import (
 	"github.com/MetaDandy/go-fiber-skeleton/config"
+	"github.com/MetaDandy/go-fiber-skeleton/src/core/user"
 	"github.com/MetaDandy/go-fiber-skeleton/src/modules/task"
-	"github.com/MetaDandy/go-fiber-skeleton/src/modules/user"
 )
 
 type Container struct {

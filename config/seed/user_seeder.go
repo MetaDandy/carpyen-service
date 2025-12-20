@@ -107,7 +107,7 @@ func SeedUsers(db *gorm.DB) error {
 		if err != nil {
 			return err
 		}
-		user.Password = string(hashed)
+		user.Password = hashed
 
 		if err := db.Create(&user).Error; err != nil {
 			return err

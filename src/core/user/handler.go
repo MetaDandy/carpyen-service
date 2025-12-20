@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/MetaDandy/go-fiber-skeleton/helper"
 	"github.com/MetaDandy/go-fiber-skeleton/middleware"
+	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -31,15 +32,15 @@ func NewUserHandler(service UserService) UserHandler {
 func (h *Handler) RegisterRoutes(router fiber.Router) {
 	users := router.Group("/users")
 	users.Post("/login", h.Login)
-	users.Get("/", h.FindAll)
 
 	users.Use(middleware.Jwt())
 
-	users.Post("/", h.Create)
 	users.Get("/me", h.GetProfile)
+	users.Patch("/me", h.EditProfile)
+	users.Get("/", h.FindAll)
+	users.Post("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin}), h.Create)
 	users.Get("/:id", h.GetByID)
-	users.Put("/:id", h.Edit)
-	users.Put("/me/edit", h.EditProfile)
+	users.Patch("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin}), h.Edit)
 	users.Delete("/:id", h.SoftDelete)
 }
 
