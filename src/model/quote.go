@@ -16,7 +16,7 @@ type Quote struct {
 	FurnitureNumber uint
 	FurnitureCost   float64
 	TotalCost       float64
-	State           enum.StatusEnum
+	State           enum.Status
 	Comments        string
 
 	ProjectID uuid.UUID `gorm:"type:uuid;"`

@@ -12,7 +12,7 @@ type Design struct {
 	ID              uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	URLRender       string
 	IluminatedPlane string
-	State           enum.StatusEnum
+	State           enum.Status
 	Comments        string
 
 	QuoteID uuid.UUID `gorm:"type:uuid;"`

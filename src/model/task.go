@@ -12,7 +12,7 @@ type Task struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Title       string
 	Description string
-	Status      enum.StatusEnum
+	Status      enum.Status
 	InitialHour time.Time
 	FinalHour   time.Time
 

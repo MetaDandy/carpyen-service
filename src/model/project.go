@@ -13,7 +13,7 @@ type Project struct {
 	Name        string
 	Description string
 	Location    string
-	State       enum.StatusEnum
+	State       enum.Status
 
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

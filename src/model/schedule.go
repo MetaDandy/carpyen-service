@@ -15,7 +15,7 @@ type Schedule struct {
 	InitialDate  time.Time
 	FinalDate    time.Time
 	EstimateDays uint8
-	State        enum.StatusEnum
+	State        enum.Status
 
 	ProjectID uuid.UUID `gorm:"type:uuid;"`
 	Project   Project   `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
