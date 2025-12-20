@@ -65,7 +65,7 @@ func (s *Service) Create(input CreateUserDTO) error {
 	copier.Copy(&user, &input)
 	user.ID = uuid.New()
 	user.Password = hash
-	user.Role = enum.RoleEnum(input.Role)
+	user.Role = enum.Role(input.Role)
 
 	if err := s.repo.Create(user); err != nil {
 		return err
@@ -86,7 +86,7 @@ func (s *Service) Update(id string, input UpdateUserDTO) error {
 		if enum.IsValidRole(*input.Role) == false {
 			return fmt.Errorf("invalid role in update user: %s", *input.Role)
 		}
-		user.Role = enum.RoleEnum(*input.Role)
+		user.Role = enum.Role(*input.Role)
 	}
 
 	if input.Password != nil {

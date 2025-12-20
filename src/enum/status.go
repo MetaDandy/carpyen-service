@@ -1,12 +1,12 @@
 package enum
 
-type StatusEnum string
+type Status string
 
 const (
-	StatusPending  StatusEnum = "PENDING"
-	StatusActive   StatusEnum = "ACTIVE"
-	StatusApproved StatusEnum = "APPROVED"
-	StatusRejected StatusEnum = "REJECTED"
-	StatusClosed   StatusEnum = "CLOSED"
-	StatusInactive StatusEnum = "INACTIVE"
+	StatusPending  Status = "PENDING"
+	StatusActive   Status = "ACTIVE"
+	StatusApproved Status = "APPROVED"
+	StatusRejected Status = "REJECTED"
+	StatusClosed   Status = "CLOSED"
+	StatusInactive Status = "INACTIVE"
 )

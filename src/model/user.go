@@ -15,7 +15,7 @@ type User struct {
 	Phone    string
 	Address  string
 	Password string
-	Role     enum.RoleEnum
+	Role     enum.Role
 
 	Projects  []Project  `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Quotes    []Quote    `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

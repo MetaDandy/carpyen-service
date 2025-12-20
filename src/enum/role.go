@@ -1,21 +1,21 @@
 package enum
 
-type RoleEnum string
+type Role string
 
 const (
-	RoleAdmin          RoleEnum = "ADMIN"
-	RoleDesigner       RoleEnum = "DESIGNER"
-	RoleSeller         RoleEnum = "SELLER"
-	RoleChiefInstaller RoleEnum = "CHIEF_INSTALLER"
-	RoleInstaller      RoleEnum = "INSTALLER"
+	RoleAdmin          Role = "ADMIN"
+	RoleDesigner       Role = "DESIGNER"
+	RoleSeller         Role = "SELLER"
+	RoleChiefInstaller Role = "CHIEF_INSTALLER"
+	RoleInstaller      Role = "INSTALLER"
 )
 
-func (r RoleEnum) String() string {
+func (r Role) String() string {
 	return string(r)
 }
 
 func IsValidRole(role string) bool {
-	switch RoleEnum(role) {
+	switch Role(role) {
 	case RoleAdmin, RoleDesigner, RoleSeller, RoleChiefInstaller, RoleInstaller:
 		return true
 	}
