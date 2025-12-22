@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type UserHandler interface {
+type Handler interface {
 	RegisterRoutes(router fiber.Router)
 	Login(c *fiber.Ctx) error
 	Create(c *fiber.Ctx) error
@@ -19,17 +19,17 @@ type UserHandler interface {
 	SoftDelete(c *fiber.Ctx) error
 }
 
-type Handler struct {
-	service UserService
+type handler struct {
+	service Service
 }
 
-func NewUserHandler(service UserService) UserHandler {
-	return &Handler{
+func NewUserHandler(service Service) Handler {
+	return &handler{
 		service: service,
 	}
 }
 
-func (h *Handler) RegisterRoutes(router fiber.Router) {
+func (h *handler) RegisterRoutes(router fiber.Router) {
 	users := router.Group("/users")
 	users.Post("/login", h.Login)
 
@@ -44,8 +44,8 @@ func (h *Handler) RegisterRoutes(router fiber.Router) {
 	users.Delete("/:id", h.SoftDelete)
 }
 
-func (h *Handler) Login(c *fiber.Ctx) error {
-	var input LoginDTO
+func (h *handler) Login(c *fiber.Ctx) error {
+	var input Login
 	if err := c.BodyParser(&input); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
@@ -60,7 +60,7 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 	})
 }
 
-func (h *Handler) GetByID(c *fiber.Ctx) error {
+func (h *handler) GetByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	user, err := h.service.GetByID(id)
@@ -71,7 +71,7 @@ func (h *Handler) GetByID(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
-func (h *Handler) GetProfile(c *fiber.Ctx) error {
+func (h *handler) GetProfile(c *fiber.Ctx) error {
 	userID := c.Locals("user_id").(string)
 
 	user, err := h.service.GetByID(userID)
@@ -82,8 +82,8 @@ func (h *Handler) GetProfile(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
-func (h *Handler) Create(c *fiber.Ctx) error {
-	var input CreateUserDTO
+func (h *handler) Create(c *fiber.Ctx) error {
+	var input Create
 	if err := c.BodyParser(&input); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
@@ -96,9 +96,9 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusCreated)
 }
 
-func (h *Handler) Edit(c *fiber.Ctx) error {
+func (h *handler) Edit(c *fiber.Ctx) error {
 	id := c.Params("id")
-	var input UpdateUserDTO
+	var input Update
 	if err := c.BodyParser(&input); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
@@ -111,9 +111,9 @@ func (h *Handler) Edit(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (h *Handler) EditProfile(c *fiber.Ctx) error {
+func (h *handler) EditProfile(c *fiber.Ctx) error {
 	userID := c.Locals("user_id").(string)
-	var input UpdateUserProfileDTO
+	var input UpdateProfile
 	if err := c.BodyParser(&input); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
@@ -126,7 +126,7 @@ func (h *Handler) EditProfile(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (h *Handler) FindAll(c *fiber.Ctx) error {
+func (h *handler) FindAll(c *fiber.Ctx) error {
 	opts := helper.NewFindAllOptionsFromQuery(c)
 
 	finded, err := h.service.FindAll(opts)
@@ -137,7 +137,7 @@ func (h *Handler) FindAll(c *fiber.Ctx) error {
 	return c.JSON(finded)
 }
 
-func (h *Handler) SoftDelete(c *fiber.Ctx) error {
+func (h *handler) SoftDelete(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	err := h.service.SoftDelete(id)

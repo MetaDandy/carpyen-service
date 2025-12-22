@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SeedUsers(db *gorm.DB) error {
+func Users(db *gorm.DB) error {
 
 	users := []model.User{
 		{

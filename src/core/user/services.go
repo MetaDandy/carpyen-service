@@ -11,25 +11,25 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-type UserService interface {
-	Login(input LoginDTO) (string, error)
-	Create(input CreateUserDTO) error
-	Update(id string, input UpdateUserDTO) error
-	UpdateProfile(id string, input UpdateUserProfileDTO) error
+type Service interface {
+	Login(input Login) (string, error)
+	Create(input Create) error
+	Update(id string, input Update) error
+	UpdateProfile(id string, input UpdateProfile) error
 	GetByID(id string) (*response.User, error)
 	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.User], error)
 	SoftDelete(id string) error
 }
 
-type Service struct {
-	repo UserRepo
+type service struct {
+	repo Repo
 }
 
-func NewService(repo UserRepo) UserService {
-	return &Service{repo: repo}
+func NewService(repo Repo) Service {
+	return &service{repo: repo}
 }
 
-func (s *Service) Login(input LoginDTO) (string, error) {
+func (s *service) Login(input Login) (string, error) {
 	user, err := s.repo.FindByEmail(input.Email)
 	if err != nil {
 		return "", fmt.Errorf("invalid credentials")
@@ -47,7 +47,7 @@ func (s *Service) Login(input LoginDTO) (string, error) {
 	return token, nil
 }
 
-func (s *Service) Create(input CreateUserDTO) error {
+func (s *service) Create(input Create) error {
 	if enum.IsValidRole(input.Role) == false {
 		return fmt.Errorf("invalid role in create user: %s", input.Role)
 	}
@@ -74,7 +74,7 @@ func (s *Service) Create(input CreateUserDTO) error {
 	return nil
 }
 
-func (s *Service) Update(id string, input UpdateUserDTO) error {
+func (s *service) Update(id string, input Update) error {
 	user, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
@@ -108,7 +108,7 @@ func (s *Service) Update(id string, input UpdateUserDTO) error {
 	return nil
 }
 
-func (s *Service) UpdateProfile(id string, input UpdateUserProfileDTO) error {
+func (s *service) UpdateProfile(id string, input UpdateProfile) error {
 	user, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func (s *Service) UpdateProfile(id string, input UpdateUserProfileDTO) error {
 	return nil
 }
 
-func (s *Service) GetByID(id string) (*response.User, error) {
+func (s *service) GetByID(id string) (*response.User, error) {
 	user, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func (s *Service) GetByID(id string) (*response.User, error) {
 	return &dto, nil
 }
 
-func (s *Service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.User], error) {
+func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.User], error) {
 	finded, total, err := s.repo.FindAll(opts)
 	if err != nil {
 		return nil, err
@@ -150,6 +150,6 @@ func (s *Service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[resp
 	}, nil
 }
 
-func (s *Service) SoftDelete(id string) error {
+func (s *service) SoftDelete(id string) error {
 	return s.repo.SoftDelete(id)
 }

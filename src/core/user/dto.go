@@ -1,6 +1,6 @@
 package user
 
-type CreateUserDTO struct {
+type Create struct {
 	Name            string `json:"name" validate:"required"`
 	Email           string `json:"email" validate:"required,email"`
 	Phone           string `json:"phone"`
@@ -10,7 +10,7 @@ type CreateUserDTO struct {
 	Role            string `json:"role" validate:"required"`
 }
 
-type UpdateUserDTO struct {
+type Update struct {
 	Name            *string `json:"name"`
 	Email           *string `json:"email"`
 	Phone           *string `json:"phone"`
@@ -20,14 +20,14 @@ type UpdateUserDTO struct {
 	Role            *string `json:"role"`
 }
 
-type UpdateUserProfileDTO struct {
+type UpdateProfile struct {
 	Name    *string `json:"name"`
 	Phone   *string `json:"phone"`
 	Address *string `json:"address"`
 	Email   *string `json:"email"`
 }
 
-type LoginDTO struct {
+type Login struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
 }

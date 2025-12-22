@@ -35,38 +35,38 @@ func NewFindAllOptionsFromQuery(c *fiber.Ctx) *FindAllOptions {
 	}
 }
 
-func ApplyFindAllOptions(query *gorm.DB, opts *FindAllOptions) (*gorm.DB, int64) {
+func (f *FindAllOptions) ApplyFindAllOptions(query *gorm.DB) (*gorm.DB, int64) {
 	var total int64
 
-	if opts == nil {
+	if f == nil {
 		query = query.Order("created_at asc")
 		query.Count(&total)
 		return query, total
 	}
 
-	orderBy := opts.OrderBy
+	orderBy := f.OrderBy
 	if orderBy == "" {
 		orderBy = "created_at"
 	}
 
 	sort := "asc"
-	if opts.Sort == "desc" {
+	if f.Sort == "desc" {
 		sort = "desc"
 	}
 
 	query = query.Order(orderBy + " " + sort)
 
-	if opts.OnlyDeleted {
+	if f.OnlyDeleted {
 		query = query.Unscoped().Where("deleted_at IS NOT NULL")
-	} else if opts.ShowDeleted {
+	} else if f.ShowDeleted {
 		query = query.Unscoped() // trae todos
 	}
 
-	if opts.Search != "" {
-		query = query.Where("name ILIKE ?", "%"+opts.Search+"%")
+	if f.Search != "" {
+		query = query.Where("name ILIKE ?", "%"+f.Search+"%")
 	}
 
 	query.Count(&total)
-	query = query.Limit(int(opts.Limit)).Offset(int(opts.Offset))
+	query = query.Limit(int(f.Limit)).Offset(int(f.Offset))
 	return query, total
 }

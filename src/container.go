@@ -7,7 +7,7 @@ import (
 )
 
 type Container struct {
-	UserHandler user.UserHandler
+	Handler     user.Handler
 	TaskHandler task.TaskHandler
 }
 
@@ -21,7 +21,7 @@ func SetupContainer() *Container {
 	taskHandler := task.NewTaskHandler(taskService)
 
 	return &Container{
-		UserHandler: userHandler,
+		Handler:     userHandler,
 		TaskHandler: taskHandler,
 	}
 }
