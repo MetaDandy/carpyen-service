@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
+	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

@@ -1,9 +1,9 @@
 package user
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/helper"
-	"github.com/MetaDandy/go-fiber-skeleton/middleware"
-	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
+	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/middleware"
+	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/gofiber/fiber/v2"
 )
 

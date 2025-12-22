@@ -1,4 +1,4 @@
-module github.com/MetaDandy/go-fiber-skeleton
+module github.com/MetaDandy/carpyen-service
 
 go 1.25.5
 

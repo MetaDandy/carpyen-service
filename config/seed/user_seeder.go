@@ -1,9 +1,9 @@
 package seed
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/helper"
-	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
-	"github.com/MetaDandy/go-fiber-skeleton/src/model"
+	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/src/enum"
+	"github.com/MetaDandy/carpyen-service/src/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

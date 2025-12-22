@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/MetaDandy/go-fiber-skeleton/config/seed"
+	"github.com/MetaDandy/carpyen-service/config/seed"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

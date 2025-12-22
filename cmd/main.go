@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
-	"github.com/MetaDandy/go-fiber-skeleton/cmd/api"
-	"github.com/MetaDandy/go-fiber-skeleton/config"
-	"github.com/MetaDandy/go-fiber-skeleton/middleware"
-	"github.com/MetaDandy/go-fiber-skeleton/src"
+	"github.com/MetaDandy/carpyen-service/cmd/api"
+	"github.com/MetaDandy/carpyen-service/config"
+	"github.com/MetaDandy/carpyen-service/middleware"
+	"github.com/MetaDandy/carpyen-service/src"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )

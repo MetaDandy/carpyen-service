@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/helper"
-	"github.com/MetaDandy/go-fiber-skeleton/src/model"
+	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/src/model"
 	"gorm.io/gorm"
 )
 

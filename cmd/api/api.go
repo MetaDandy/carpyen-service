@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/src"
+	"github.com/MetaDandy/carpyen-service/src"
 	"github.com/gofiber/fiber/v2"
 )
 

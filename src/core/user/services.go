@@ -3,10 +3,10 @@ package user
 import (
 	"fmt"
 
-	"github.com/MetaDandy/go-fiber-skeleton/helper"
-	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
-	"github.com/MetaDandy/go-fiber-skeleton/src/model"
-	"github.com/MetaDandy/go-fiber-skeleton/src/response"
+	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/src/enum"
+	"github.com/MetaDandy/carpyen-service/src/model"
+	"github.com/MetaDandy/carpyen-service/src/response"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 )

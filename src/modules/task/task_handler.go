@@ -1,7 +1,7 @@
 package task
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/helper"
+	"github.com/MetaDandy/carpyen-service/helper"
 	"github.com/gofiber/fiber/v2"
 )
 

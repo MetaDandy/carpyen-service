@@ -1,7 +1,7 @@
 package response
 
 import (
-	"github.com/MetaDandy/go-fiber-skeleton/src/model"
+	"github.com/MetaDandy/carpyen-service/src/model"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 )

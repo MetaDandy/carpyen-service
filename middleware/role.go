@@ -4,7 +4,7 @@ import (
 	"log"
 	"slices"
 
-	"github.com/MetaDandy/go-fiber-skeleton/src/enum"
+	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/gofiber/fiber/v2"
 )
 

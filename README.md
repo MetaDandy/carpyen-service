@@ -396,7 +396,7 @@ api.Get("/protected", handler.Protected)
 ### Generar JWT
 
 ```go
-import "github.com/MetaDandy/go-fiber-skeleton/helper"
+import "github.com/MetaDandy/carpyen-service/helper"
 
 token, err := helper.GenerateJwt(userID, email, role)
 // Token válido por 24 horas
@@ -405,7 +405,7 @@ token, err := helper.GenerateJwt(userID, email, role)
 ### Validar Contraseñas
 
 ```go
-import "github.com/MetaDandy/go-fiber-skeleton/helper"
+import "github.com/MetaDandy/carpyen-service/helper"
 
 // Hash
 hashedPassword, _ := helper.HashPassword("plainPassword")
