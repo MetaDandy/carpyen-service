@@ -28,6 +28,7 @@ type User struct {
 	MaterialSuppliers []MaterialSupplier `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ScheduleAssigneds []Schedule         `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	TaskAssigneds     []Task             `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Clients           []Client           `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

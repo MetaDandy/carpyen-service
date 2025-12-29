@@ -15,6 +15,9 @@ type Client struct {
 	Address  string
 	Password string
 
+	UserID uuid.UUID `gorm:"type:uuid;"`
+	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+
 	Projects []Project `gorm:"foreignKey:ClientID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
