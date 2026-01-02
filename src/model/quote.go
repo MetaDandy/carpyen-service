@@ -9,15 +9,12 @@ import (
 )
 
 type Quote struct {
-	ID              uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	MeterType       enum.Meter
-	MeterCost       float64
-	MeterQuantity   float64
-	FurnitureNumber uint
-	FurnitureCost   float64
-	TotalCost       float64
-	State           enum.Status
-	Comments        string
+	ID           uuid.UUID `gorm:"type:uuid;primaryKey;"`
+	TotalCost    float64
+	Status       enum.Status
+	Comments     string
+	ValidDays    int
+	DeliveryDays int
 
 	ProjectID uuid.UUID `gorm:"type:uuid;"`
 	Project   Project   `gorm:"foreignKey:ProjectID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
@@ -25,7 +22,8 @@ type Quote struct {
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	Designs []Design `gorm:"foreignKey:QuoteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Designs   []Design   `gorm:"foreignKey:QuoteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	SubQuotes []SubQuote `gorm:"foreignKey:QuoteID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

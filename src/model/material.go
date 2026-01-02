@@ -9,15 +9,13 @@ import (
 )
 
 type Material struct {
-	ID           uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	Name         string
-	Type         enum.Material
-	UniteMessure string
-	UnitPrice    float64
-	Stock        uint
+	ID          uuid.UUID `gorm:"type:uuid;primaryKey;"`
+	Name        string
+	Type        enum.Material
+	UnitMeasure enum.Measure
+	UnitPrice   float64
 
-	MaterialProjects  []MaterialProject  `gorm:"foreignKey:MaterialID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	MaterialSuppliers []MaterialSupplier `gorm:"foreignKey:MaterialID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BatchMaterialSuppliers []BatchMaterialSupplier `gorm:"foreignKey:MaterialID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

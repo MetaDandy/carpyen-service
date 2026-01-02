@@ -1,8 +1,9 @@
 package enum
 
-type Meter string
+type Unit string
 
 const (
-	MeterLinear Meter = "LINEAL"
-	MeterSquare Meter = "CUADRADO"
+	Linear Unit = "LINEAL"
+	Square Unit = "CUADRADO"
+	Piece  Unit = "PIEZA"
 )
