@@ -6,7 +6,6 @@ type Create struct {
 	Phone   string `json:"phone"`
 	Email   string `json:"email"`
 	Address string `json:"address"`
-	UserID  string `json:"user_id"`
 }
 
 type Update struct {

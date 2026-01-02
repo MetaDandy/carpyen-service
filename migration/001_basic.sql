@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS supplier (
     name VARCHAR(255) NOT NULL,
     contact VARCHAR(255),
     phone VARCHAR(20),
-    email VARCHAR(255),
+    email VARCHAR(255) NOT NULL UNIQUE,
     address TEXT,
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

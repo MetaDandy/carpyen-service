@@ -15,6 +15,7 @@ func SetupApi(app *fiber.App, c *src.Container) {
 	handlers := []func(fiber.Router){
 		c.User.RegisterRoutes,
 		c.Client.RegisterRoutes,
+		c.Supplier.RegisterRoutes,
 	}
 
 	for _, register := range handlers {

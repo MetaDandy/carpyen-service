@@ -13,7 +13,7 @@ type Supplier struct {
 	Phone   string `json:"phone"`
 	Email   string `json:"email"`
 	Address string `json:"address"`
-	User    User   `json:"user"`
+	User    *User  `json:"user,omitzero"`
 }
 
 func SupplierToDto(m *model.Supplier) Supplier {
@@ -22,7 +22,10 @@ func SupplierToDto(m *model.Supplier) Supplier {
 	copier.Copy(&dto, m)
 
 	if m.User.ID != (uuid.UUID{}) {
-		dto.User = UserToDto(&m.User)
+		userDto := UserToDto(&m.User)
+		dto.User = &userDto
+	} else {
+		dto.User = nil
 	}
 
 	return dto

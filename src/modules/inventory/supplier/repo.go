@@ -30,7 +30,7 @@ func (r *repo) create(m model.Supplier) error {
 
 func (r *repo) findByID(id string) (model.Supplier, error) {
 	var supplier model.Supplier
-	err := r.db.First(&supplier, "id = ?", id).Error
+	err := r.db.Preload("User").First(&supplier, "id = ?", id).Error
 	return supplier, err
 }
 

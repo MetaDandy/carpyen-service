@@ -4,11 +4,12 @@ import (
 	"github.com/MetaDandy/carpyen-service/helper"
 	"github.com/MetaDandy/carpyen-service/src/model"
 	"github.com/MetaDandy/carpyen-service/src/response"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 )
 
 type Service interface {
-	create(input Create) error
+	create(input Create, userID string) error
 	findByID(id string) (*response.Supplier, error)
 	findAll(opts *helper.FindAllOptions) (*response.Paginated[response.Supplier], error)
 	update(id string, input Update) error
@@ -30,8 +31,8 @@ func NewService(repo Repo, userRepo UserRepo) Service {
 	return &service{repo: repo, userRepo: userRepo}
 }
 
-func (s *service) create(input Create) error {
-	user, err := s.userRepo.FindByID(input.UserID)
+func (s *service) create(input Create, userID string) error {
+	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return err
 	}
@@ -39,6 +40,8 @@ func (s *service) create(input Create) error {
 	supplier := model.Supplier{}
 	copier.Copy(&supplier, &input)
 	supplier.User = user
+	supplier.ID = uuid.New()
+	supplier.UserID = user.ID
 
 	return s.repo.create(supplier)
 }

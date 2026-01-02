@@ -1,6 +1,8 @@
 package supplier
 
 import (
+	"fmt"
+
 	"github.com/MetaDandy/carpyen-service/helper"
 	"github.com/MetaDandy/carpyen-service/middleware"
 	"github.com/MetaDandy/carpyen-service/src/enum"
@@ -8,7 +10,7 @@ import (
 )
 
 type Handler interface {
-	registerRoutes(router fiber.Router)
+	RegisterRoutes(router fiber.Router)
 	create(c *fiber.Ctx) error
 	findByID(c *fiber.Ctx) error
 	findAll(c *fiber.Ctx) error
@@ -24,7 +26,7 @@ func NewHandler(service Service) Handler {
 	return &handler{service: service}
 }
 
-func (h *handler) registerRoutes(router fiber.Router) {
+func (h *handler) RegisterRoutes(router fiber.Router) {
 	supplier := router.Group("/suppliers")
 
 	supplier.Use(middleware.Jwt())
@@ -42,7 +44,11 @@ func (h *handler) create(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
 
-	if err := h.service.create(input); err != nil {
+	user_id := c.Locals("user_id").(string)
+
+	fmt.Printf("user id %v", user_id)
+
+	if err := h.service.create(input, user_id); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create supplier")
 	}
 
