@@ -12,7 +12,7 @@ type Supplier struct {
 	Name    string
 	Contact string
 	Phone   string
-	Email   string
+	Email   string `gorm:"uniqueIndex"`
 	Address string
 
 	UserID uuid.UUID `gorm:"type:uuid;"`
