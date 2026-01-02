@@ -147,6 +147,14 @@ func (h *handler) FindAll(c *fiber.Ctx) error {
 func (h *handler) SoftDelete(c *fiber.Ctx) error {
 	id := c.Params("id")
 
+	role := c.Locals("role").(string)
+
+	if role == enum.RoleSeller.String() {
+		if err := h.service.ValidateSeller(c.Locals("user_id").(string), id); err != nil {
+			return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+		}
+	}
+
 	err := h.service.SoftDelete(id)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Could not delete user")
