@@ -2,13 +2,15 @@ package src
 
 import (
 	"github.com/MetaDandy/carpyen-service/config"
+	"github.com/MetaDandy/carpyen-service/src/core/client"
 	"github.com/MetaDandy/carpyen-service/src/core/user"
 	"github.com/MetaDandy/carpyen-service/src/modules/task"
 )
 
 type Container struct {
-	Handler     user.Handler
-	TaskHandler task.TaskHandler
+	Handler       user.Handler
+	ClientHandler client.Handler
+	TaskHandler   task.TaskHandler
 }
 
 func SetupContainer() *Container {
@@ -20,8 +22,13 @@ func SetupContainer() *Container {
 	taskService := task.NewService(taskRepo)
 	taskHandler := task.NewTaskHandler(taskService)
 
+	clientRepo := client.NewRepo(config.DB)
+	clientService := client.NewService(clientRepo)
+	clientHandler := client.NewClientHandler(clientService)
+
 	return &Container{
-		Handler:     userHandler,
-		TaskHandler: taskHandler,
+		Handler:       userHandler,
+		TaskHandler:   taskHandler,
+		ClientHandler: clientHandler,
 	}
 }
