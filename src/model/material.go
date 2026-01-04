@@ -14,7 +14,9 @@ type Material struct {
 	Type        enum.Material
 	UnitMeasure enum.Measure
 	UnitPrice   float64
+	UserID      uuid.UUID `gorm:"type:uuid;"`
 
+	User                   *User                   `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BatchMaterialSuppliers []BatchMaterialSupplier `gorm:"foreignKey:MaterialID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
