@@ -1,0 +1,103 @@
+package material
+
+import (
+	"errors"
+
+	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/src/model"
+	"github.com/MetaDandy/carpyen-service/src/response"
+	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
+)
+
+type Service interface {
+	Create(input Create) error
+	FindByID(id string) (*response.Material, error)
+	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error)
+	Update(id string, input Update) error
+	SoftDelete(id string) error
+
+	ValidateChiefInstaller(id string, iduser string) error
+}
+type UserRepo interface {
+	FindByID(id string) (model.User, error)
+}
+
+type service struct {
+	repo Repo
+}
+
+func NewService(repo Repo) Service {
+	return &service{repo: repo}
+}
+
+func (s *service) Create(input Create) error {
+
+	if !input.Type.IsValid() {
+		return errors.New("invalid material type")
+	}
+	if !input.UnitMeasure.IsValid() {
+		return errors.New("invalid unit measure")
+	}
+
+	material := model.Material{}
+	copier.Copy(&material, &input)
+	material.ID = uuid.New()
+
+	return s.repo.create(material)
+}
+
+func (s *service) FindByID(id string) (*response.Material, error) {
+	material, err := s.repo.findByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	dto := response.MaterialToDto(&material)
+	return &dto, nil
+}
+
+func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error) {
+	finded, total, err := s.repo.findAll(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	dtos := response.MaterialToListDto(finded)
+	pages := uint((total + int64(opts.Limit) - 1) / int64(opts.Limit))
+
+	paginated := &response.Paginated[response.Material]{
+		Data:   dtos,
+		Total:  total,
+		Limit:  opts.Limit,
+		Offset: opts.Offset,
+		Pages:  pages,
+	}
+
+	return paginated, nil
+}
+func (s *service) Update(id string, input Update) error {
+	material, err := s.repo.findByID(id)
+	if err != nil {
+		return err
+	}
+
+	if input.Type != nil && !input.Type.IsValid() {
+		return errors.New("invalid material type")
+	}
+	if input.UnitMeasure != nil && !input.UnitMeasure.IsValid() {
+		return errors.New("invalid unit measure")
+	}
+
+	copier.CopyWithOption(&material, &input, copier.Option{IgnoreEmpty: true})
+
+	return s.repo.update(material)
+}
+
+func (s *service) SoftDelete(id string) error {
+	return s.repo.softDelete(id)
+}
+
+func (s *service) ValidateChiefInstaller(id string, iduser string) error {
+	return s.repo.validateChiefInstaller(id, iduser)
+}
