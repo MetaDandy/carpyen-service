@@ -13,7 +13,7 @@ type Repo interface {
 	update(m model.Material) error
 	softDelete(id string) error
 
-	validateChiefInstaller(installerID string, materialID string) error
+	validateInstaller(id string, iduser string) error
 }
 
 type repo struct {
@@ -30,7 +30,7 @@ func (r *repo) create(m model.Material) error {
 
 func (r *repo) findByID(id string) (model.Material, error) {
 	var material model.Material
-	err := r.db.Preload("BatchMaterialSuppliers").First(&material, "id = ?", id).Error
+	err := r.db.Preload("User").First(&material, "id = ?", id).Error
 	return material, err
 }
 
@@ -52,7 +52,7 @@ func (r *repo) softDelete(id string) error {
 	return r.db.Delete(&model.Material{}, "id = ?", id).Error
 }
 
-func (r *repo) validateChiefInstaller(id string, iduser string) error {
+func (r *repo) validateInstaller(id string, iduser string) error {
 	err := r.db.Model(&model.Material{}).
 		Where("id = ? AND user_id = ?", id, iduser).Error
 	if err != nil {

@@ -11,27 +11,33 @@ import (
 )
 
 type Service interface {
-	Create(input Create) error
+	Create(input Create, userID string) error
 	FindByID(id string) (*response.Material, error)
 	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error)
 	Update(id string, input Update) error
 	SoftDelete(id string) error
 
-	ValidateChiefInstaller(id string, iduser string) error
+	ValidateInstaller(id string, iduser string) error
 }
 type UserRepo interface {
 	FindByID(id string) (model.User, error)
 }
 
 type service struct {
-	repo Repo
+	repo     Repo
+	userRepo UserRepo
 }
 
-func NewService(repo Repo) Service {
-	return &service{repo: repo}
+func NewService(repo Repo, userRepo UserRepo) Service {
+	return &service{repo: repo, userRepo: userRepo}
 }
 
-func (s *service) Create(input Create) error {
+func (s *service) Create(input Create, userID string) error {
+
+	user, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return err
+	}
 
 	if !input.Type.IsValid() {
 		return errors.New("invalid material type")
@@ -43,6 +49,7 @@ func (s *service) Create(input Create) error {
 	material := model.Material{}
 	copier.Copy(&material, &input)
 	material.ID = uuid.New()
+	material.UserID = user.ID
 
 	return s.repo.create(material)
 }
@@ -98,6 +105,6 @@ func (s *service) SoftDelete(id string) error {
 	return s.repo.softDelete(id)
 }
 
-func (s *service) ValidateChiefInstaller(id string, iduser string) error {
-	return s.repo.validateChiefInstaller(id, iduser)
+func (s *service) ValidateInstaller(id string, iduser string) error {
+	return s.repo.validateInstaller(id, iduser)
 }

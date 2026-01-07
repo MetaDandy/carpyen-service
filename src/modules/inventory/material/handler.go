@@ -42,7 +42,9 @@ func (h *handler) create(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
 
-	if err := h.service.Create(input); err != nil {
+	user_id := c.Locals("user_id").(string)
+
+	if err := h.service.Create(input, user_id); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create material")
 	}
 
@@ -66,7 +68,7 @@ func (h *handler) findAll(c *fiber.Ctx) error {
 
 	finded, err := h.service.FindAll(opts)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve suppliers")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve materials")
 	}
 
 	return c.JSON(finded)
@@ -82,14 +84,14 @@ func (h *handler) update(c *fiber.Ctx) error {
 	role := c.Locals("role").(string)
 	user_id := c.Locals("user_id").(string)
 
-	if role == enum.RoleChiefInstaller.String() {
-		if err := h.service.ValidateChiefInstaller(id, user_id); err != nil {
+	if role == enum.RoleInstaller.String() {
+		if err := h.service.ValidateInstaller(id, user_id); err != nil {
 			return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 		}
 	}
 
 	if err := h.service.Update(id, input); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update supplier")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update material")
 	}
 
 	return c.SendStatus(fiber.StatusOK)
@@ -101,14 +103,14 @@ func (h *handler) softDelete(c *fiber.Ctx) error {
 	role := c.Locals("role").(string)
 	user_id := c.Locals("user_id").(string)
 
-	if role == enum.RoleChiefInstaller.String() {
-		if err := h.service.ValidateChiefInstaller(id, user_id); err != nil {
+	if role == enum.RoleInstaller.String() {
+		if err := h.service.ValidateInstaller(id, user_id); err != nil {
 			return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
 		}
 	}
 
 	if err := h.service.SoftDelete(id); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete supplier")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete material")
 	}
 
 	return c.SendStatus(fiber.StatusOK)

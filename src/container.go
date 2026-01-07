@@ -29,7 +29,7 @@ func SetupContainer() *Container {
 	supplierHandler := supplier.NewHandler(supplierService)
 
 	materialRepo := material.NewRepo(config.DB)
-	materialService := material.NewService(materialRepo)
+	materialService := material.NewService(materialRepo, userRepo)
 	materialHandler := material.NewMaterialHandler(materialService)
 
 	return &Container{
