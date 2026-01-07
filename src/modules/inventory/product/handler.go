@@ -1,4 +1,4 @@
-package material
+package product
 
 import (
 	"github.com/MetaDandy/carpyen-service/helper"
@@ -20,20 +20,20 @@ type handler struct {
 	service Service
 }
 
-func NewMaterialHandler(service Service) Handler {
+func NewProductHandler(service Service) Handler {
 	return &handler{service: service}
 }
 
 func (h *handler) RegisterRoutes(router fiber.Router) {
-	material := router.Group("/materials")
+	product := router.Group("/products")
 
-	material.Use(middleware.Jwt())
+	product.Use(middleware.Jwt())
 
-	material.Post("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.create)
-	material.Get("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller, enum.RoleInstaller}), h.findAll)
-	material.Get("/:id", h.findByID)
-	material.Patch("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.update)
-	material.Delete("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller}), h.softDelete)
+	product.Post("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.create)
+	product.Get("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller, enum.RoleInstaller}), h.findAll)
+	product.Get("/:id", h.findByID)
+	product.Patch("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.update)
+	product.Delete("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller}), h.softDelete)
 }
 
 func (h *handler) create(c *fiber.Ctx) error {
@@ -45,7 +45,7 @@ func (h *handler) create(c *fiber.Ctx) error {
 	user_id := c.Locals("user_id").(string)
 
 	if err := h.service.Create(input, user_id); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create material")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create product")
 	}
 
 	return c.SendStatus(fiber.StatusCreated)
@@ -55,12 +55,12 @@ func (h *handler) create(c *fiber.Ctx) error {
 func (h *handler) findByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	material, err := h.service.FindByID(id)
+	product, err := h.service.FindByID(id)
 	if err != nil {
-		return fiber.NewError(fiber.StatusNotFound, "Material not found")
+		return fiber.NewError(fiber.StatusNotFound, "Product not found")
 	}
 
-	return c.JSON(material)
+	return c.JSON(product)
 }
 
 func (h *handler) findAll(c *fiber.Ctx) error {
@@ -68,7 +68,7 @@ func (h *handler) findAll(c *fiber.Ctx) error {
 
 	finded, err := h.service.FindAll(opts)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve materials")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve products")
 	}
 
 	return c.JSON(finded)
@@ -91,7 +91,7 @@ func (h *handler) update(c *fiber.Ctx) error {
 	}
 
 	if err := h.service.Update(id, input); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update material")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update product")
 	}
 
 	return c.SendStatus(fiber.StatusOK)
@@ -110,7 +110,7 @@ func (h *handler) softDelete(c *fiber.Ctx) error {
 	}
 
 	if err := h.service.SoftDelete(id); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete material")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete product")
 	}
 
 	return c.SendStatus(fiber.StatusOK)

@@ -1,4 +1,4 @@
-package material
+package product
 
 import (
 	"errors"
@@ -12,8 +12,8 @@ import (
 
 type Service interface {
 	Create(input Create, userID string) error
-	FindByID(id string) (*response.Material, error)
-	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error)
+	FindByID(id string) (*response.Product, error)
+	FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Product], error)
 	Update(id string, input Update) error
 	SoftDelete(id string) error
 
@@ -40,40 +40,37 @@ func (s *service) Create(input Create, userID string) error {
 	}
 
 	if !input.Type.IsValid() {
-		return errors.New("invalid material type")
-	}
-	if !input.UnitMeasure.IsValid() {
-		return errors.New("invalid unit measure")
+		return errors.New("invalid product type")
 	}
 
-	material := model.Material{}
-	copier.Copy(&material, &input)
-	material.ID = uuid.New()
-	material.UserID = user.ID
+	product := model.Product{}
+	copier.Copy(&product, &input)
+	product.ID = uuid.New()
+	product.UserID = user.ID
 
-	return s.repo.create(material)
+	return s.repo.create(product)
 }
 
-func (s *service) FindByID(id string) (*response.Material, error) {
-	material, err := s.repo.findByID(id)
+func (s *service) FindByID(id string) (*response.Product, error) {
+	product, err := s.repo.findByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	dto := response.MaterialToDto(&material)
+	dto := response.ProductToDto(&product)
 	return &dto, nil
 }
 
-func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error) {
+func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Product], error) {
 	finded, total, err := s.repo.findAll(opts)
 	if err != nil {
 		return nil, err
 	}
 
-	dtos := response.MaterialToListDto(finded)
+	dtos := response.ProductToListDto(finded)
 	pages := uint((total + int64(opts.Limit) - 1) / int64(opts.Limit))
 
-	paginated := &response.Paginated[response.Material]{
+	paginated := &response.Paginated[response.Product]{
 		Data:   dtos,
 		Total:  total,
 		Limit:  opts.Limit,
@@ -84,21 +81,18 @@ func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[resp
 	return paginated, nil
 }
 func (s *service) Update(id string, input Update) error {
-	material, err := s.repo.findByID(id)
+	product, err := s.repo.findByID(id)
 	if err != nil {
 		return err
 	}
 
 	if input.Type != nil && !input.Type.IsValid() {
-		return errors.New("invalid material type")
-	}
-	if input.UnitMeasure != nil && !input.UnitMeasure.IsValid() {
-		return errors.New("invalid unit measure")
+		return errors.New("invalid product type")
 	}
 
-	copier.CopyWithOption(&material, &input, copier.Option{IgnoreEmpty: true})
+	copier.CopyWithOption(&product, &input, copier.Option{IgnoreEmpty: true})
 
-	return s.repo.update(material)
+	return s.repo.update(product)
 }
 
 func (s *service) SoftDelete(id string) error {

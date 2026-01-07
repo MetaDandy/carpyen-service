@@ -14,6 +14,9 @@ type Product struct {
 	Type      enum.Product
 	UnitPrice float64
 
+	UserID uuid.UUID `gorm:"type:uuid;"`
+	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+
 	BatchProductSuppliers []BatchProductSupplier `gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	BatchProductMaterials []BatchProductMaterial `gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
