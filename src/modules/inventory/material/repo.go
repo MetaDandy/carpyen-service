@@ -53,11 +53,9 @@ func (r *repo) softDelete(id string) error {
 }
 
 func (r *repo) validateInstaller(id string, iduser string) error {
-	err := r.db.Model(&model.Material{}).
-		Where("id = ? AND user_id = ?", id, iduser).Error
-	if err != nil {
-		return err
-	}
-
-	return nil
+	var material model.Material
+	return r.db.
+		Where("id = ? AND user_id = ?", id, iduser).
+		First(&material).
+		Error
 }

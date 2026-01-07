@@ -5,6 +5,7 @@ import (
 	"github.com/MetaDandy/carpyen-service/src/core/client"
 	"github.com/MetaDandy/carpyen-service/src/core/user"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/material"
+	"github.com/MetaDandy/carpyen-service/src/modules/inventory/product"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/supplier"
 )
 
@@ -13,6 +14,7 @@ type Container struct {
 	Client   client.Handler
 	Supplier supplier.Handler
 	Material material.Handler
+	Product  product.Handler
 }
 
 func SetupContainer() *Container {
@@ -32,10 +34,15 @@ func SetupContainer() *Container {
 	materialService := material.NewService(materialRepo, userRepo)
 	materialHandler := material.NewMaterialHandler(materialService)
 
+	productRepo := product.NewRepo(config.DB)
+	productService := product.NewService(productRepo, userRepo)
+	productHandler := product.NewProductHandler(productService)
+
 	return &Container{
 		User:     userHandler,
 		Client:   clientHandler,
 		Supplier: supplierHandler,
 		Material: materialHandler,
+		Product:  productHandler,
 	}
 }
