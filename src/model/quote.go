@@ -5,12 +5,13 @@ import (
 
 	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type Quote struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	TotalCost    float64
+	TotalCost    decimal.Decimal
 	Status       enum.Status
 	Comments     string
 	ValidDays    int

@@ -8,6 +8,7 @@ import (
 	"github.com/MetaDandy/carpyen-service/src/response"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
+	"github.com/shopspring/decimal"
 )
 
 type Service interface {
@@ -50,6 +51,11 @@ func (s *service) Create(input Create, userID string) error {
 	copier.Copy(&material, &input)
 	material.ID = uuid.New()
 	material.UserID = user.ID
+
+	material.UnitPrice, err = decimal.NewFromString(input.UnitPrice)
+	if err != nil {
+		return errors.New("invalid unit price")
+	}
 
 	return s.repo.create(material)
 }
@@ -97,6 +103,13 @@ func (s *service) Update(id string, input Update) error {
 	}
 
 	copier.CopyWithOption(&material, &input, copier.Option{IgnoreEmpty: true})
+
+	if input.UnitPrice != nil {
+		material.UnitPrice, err = decimal.NewFromString(*input.UnitPrice)
+		if err != nil {
+			return errors.New("invalid unit price")
+		}
+	}
 
 	return s.repo.update(material)
 }

@@ -4,14 +4,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type ProjectBatchProductMaterial struct {
 	ID         uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	Quantity   float64
-	UnitPrice  float64
-	TotalPrice float64
+	Quantity   decimal.Decimal
+	UnitPrice  decimal.Decimal
+	TotalPrice decimal.Decimal
 
 	ProjectID uuid.UUID `gorm:"type:uuid;index;"`
 	Project   Project   `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

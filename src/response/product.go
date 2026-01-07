@@ -7,10 +7,10 @@ import (
 )
 
 type Product struct {
-	ID        string  `json:"id"`
-	Name      string  `json:"name"`
-	Type      string  `json:"type"`
-	UnitPrice float64 `json:"unit_price"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Type      string `json:"type"`
+	UnitPrice string `json:"unit_price"`
 
 	User *User `json:"user,omitzero"`
 }
@@ -18,6 +18,8 @@ type Product struct {
 func ProductToDto(m *model.Product) Product {
 	var dto Product
 	copier.Copy(&dto, m)
+
+	dto.UnitPrice = m.UnitPrice.String()
 
 	if m.User.ID != (uuid.UUID{}) {
 		userDto := UserToDto(&m.User)

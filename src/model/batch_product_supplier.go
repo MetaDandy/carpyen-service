@@ -4,14 +4,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type BatchProductSupplier struct {
 	ID         uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Quantity   uint
-	UnitPrice  float64
-	TotalPrice float64
+	UnitPrice  decimal.Decimal
+	TotalPrice decimal.Decimal
 
 	ProductID uuid.UUID `gorm:"type:uuid;"`
 	Product   Product   `gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

@@ -20,6 +20,8 @@ func MaterialToDto(m *model.Material) Material {
 	var dto Material
 	copier.Copy(&dto, m)
 
+	dto.UnitPrice = m.UnitPrice.String()
+
 	if m.User.ID != (uuid.UUID{}) {
 		userDto := UserToDto(&m.User)
 		dto.User = &userDto

@@ -5,6 +5,7 @@ import (
 
 	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +13,7 @@ type Product struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Name      string
 	Type      enum.Product
-	UnitPrice float64
+	UnitPrice decimal.Decimal
 
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

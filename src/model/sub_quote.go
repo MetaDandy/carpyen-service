@@ -5,16 +5,17 @@ import (
 
 	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
 type SubQuote struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Ambient      string
-	UnitCost     float64
-	UnitQuantity float64
+	UnitCost     decimal.Decimal
+	UnitQuantity decimal.Decimal
 	UnitType     enum.Unit
-	TotalCost    float64
+	TotalCost    decimal.Decimal
 	Status       enum.Status
 	Description  string
 
