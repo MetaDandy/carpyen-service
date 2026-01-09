@@ -8,7 +8,7 @@ import (
 
 type Repo interface {
 	create(m model.BatchProductMaterial) error
-	findByID(id string) (model.BatchProductMaterial, error)
+	FindByID(id string) (model.BatchProductMaterial, error)
 	findAll(opts *helper.FindAllOptions) ([]model.BatchProductMaterial, int64, error)
 	update(m model.BatchProductMaterial) error
 	softDelete(id string) error
@@ -28,7 +28,7 @@ func (r *repo) create(m model.BatchProductMaterial) error {
 	return r.db.Create(&m).Error
 }
 
-func (r *repo) findByID(id string) (model.BatchProductMaterial, error) {
+func (r *repo) FindByID(id string) (model.BatchProductMaterial, error) {
 	var batchProductMaterial model.BatchProductMaterial
 	err := r.db.
 		Preload("Product").

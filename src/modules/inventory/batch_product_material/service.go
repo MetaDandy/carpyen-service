@@ -72,7 +72,7 @@ func (s *service) Create(input Create, userID string) error {
 }
 
 func (s *service) FindByID(id string) (*response.BatchProductMaterial, error) {
-	batchProductMaterial, err := s.repo.findByID(id)
+	batchProductMaterial, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[resp
 }
 
 func (s *service) Update(id string, input Update) error {
-	batchProductMaterial, err := s.repo.findByID(id)
+	batchProductMaterial, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
 	}

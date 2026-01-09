@@ -34,12 +34,24 @@ func Load() {
 			log.Fatal("DATABASE_URL not set in .env file")
 		}
 
+		log.Println("Running migrations...")
 		Migrate(dns)
+		log.Println("Migrations completed")
 
-		DB, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+		log.Println("Connecting to database...")
+		// Agregar parámetros para Neon: timeouts y connection pooling
+		dsn := dns + "?sslmode=require&connect_timeout=30"
+		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err == nil {
+			// Configurar connection pool
+			sqlDB, _ := DB.DB()
+			sqlDB.SetMaxIdleConns(5)
+			sqlDB.SetMaxOpenConns(20)
+			sqlDB.SetConnMaxLifetime(time.Hour)
 			log.Printf("Database connected successfully after %d attempt(s)", i+1)
+			log.Println("Starting database seeding...")
 			seed.Seeder(DB)
+			log.Println("Database seeding completed")
 			return
 		}
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/MetaDandy/carpyen-service/cmd/api"
@@ -23,8 +24,11 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 	}))
 
+	log.Println("Setting up container...")
 	c := src.SetupContainer()
+	log.Println("Setting up API routes...")
 	api.SetupApi(app, c)
 
+	log.Println("Starting server on port " + config.Port)
 	app.Listen("0.0.0.0:" + config.Port)
 }
