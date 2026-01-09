@@ -10,7 +10,7 @@ import (
 
 type BatchMaterialSupplier struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey;"`
-	Quantity  uint
+	Quantity  decimal.Decimal
 	UnitPrice decimal.Decimal
 	TotalCost decimal.Decimal
 	Stock     decimal.Decimal
