@@ -4,7 +4,7 @@ import "github.com/MetaDandy/carpyen-service/src/model"
 
 type BatchProductMaterial struct {
 	ID        string `json:"id"`
-	Quantity  uint   `json:"quantity"`
+	Quantity  string `json:"quantity"`
 	UnitPrice string `json:"unit_price"`
 	TotalCost string `json:"total_cost"`
 	Stock     string `json:"stock"`
@@ -19,7 +19,7 @@ type BatchProductMaterial struct {
 func BatchProductMaterialToDto(bpm *model.BatchProductMaterial) BatchProductMaterial {
 	return BatchProductMaterial{
 		ID:        bpm.ID.String(),
-		Quantity:  bpm.Quantity,
+		Quantity:  bpm.Quantity.String(),
 		UnitPrice: bpm.UnitPrice.String(),
 		TotalCost: bpm.TotalCost.String(),
 		Stock:     bpm.Stock.String(),

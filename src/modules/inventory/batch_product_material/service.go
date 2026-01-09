@@ -7,7 +7,6 @@ import (
 	"github.com/MetaDandy/carpyen-service/src/model"
 	"github.com/MetaDandy/carpyen-service/src/response"
 	"github.com/google/uuid"
-	"github.com/jinzhu/copier"
 	"github.com/shopspring/decimal"
 )
 
@@ -38,26 +37,36 @@ type service struct {
 func NewService(repo Repo, userRepo UserRepo, productRepo ProductRepo) Service {
 	return &service{repo: repo, userRepo: userRepo, productRepo: productRepo}
 }
+
 func (s *service) Create(input Create, userID string) error {
 	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return err
 	}
 
+	product, err := s.productRepo.FindByID(input.ProductID)
+	if err != nil {
+		return err
+	}
+
 	batchProductMaterial := model.BatchProductMaterial{}
-	copier.Copy(&batchProductMaterial, &input)
 	batchProductMaterial.ID = uuid.New()
 	batchProductMaterial.UserID = user.ID
+	batchProductMaterial.ProductID = product.ID
 
 	batchProductMaterial.UnitPrice, err = decimal.NewFromString(input.UnitPrice)
 	if err != nil {
 		return errors.New("invalid unit price")
 	}
 
-	batchProductMaterial.Stock, err = decimal.NewFromString(input.Stock)
+	batchProductMaterial.Quantity, err = decimal.NewFromString(input.Quantity)
 	if err != nil {
-		return errors.New("invalid stock")
+		return errors.New("invalid quantity")
 	}
+
+	batchProductMaterial.Stock = batchProductMaterial.Quantity
+
+	batchProductMaterial.TotalCost = batchProductMaterial.Quantity.Mul(batchProductMaterial.UnitPrice)
 
 	return s.repo.create(batchProductMaterial)
 }
@@ -73,44 +82,54 @@ func (s *service) FindByID(id string) (*response.BatchProductMaterial, error) {
 }
 
 func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.BatchProductMaterial], error) {
-	batchProductMaterials, total, err := s.repo.findAll(opts)
+	finded, total, err := s.repo.findAll(opts)
 	if err != nil {
 		return nil, err
 	}
 
-	var dtos []response.BatchProductMaterial
-	for _, batchProductMaterial := range batchProductMaterials {
-		dto := response.BatchProductMaterialToDto(&batchProductMaterial)
-		dtos = append(dtos, dto)
-	}
+	dtos := response.BatchProductMaterialToListDto(finded)
+	pages := uint((total + int64(opts.Limit) - 1) / int64(opts.Limit))
 
 	paginated := &response.Paginated[response.BatchProductMaterial]{
-		Total: total,
-		Data:  dtos,
+		Data:   dtos,
+		Total:  total,
+		Limit:  opts.Limit,
+		Offset: opts.Offset,
+		Pages:  pages,
 	}
+
 	return paginated, nil
 }
 
-// Actualizar el product id solo si no se toco el stock y esta igual al quantity
 func (s *service) Update(id string, input Update) error {
 	batchProductMaterial, err := s.repo.findByID(id)
 	if err != nil {
 		return err
 	}
-	if input.Quantity != nil {
-		batchProductMaterial.Quantity = *input.Quantity
-	}
+
 	if input.UnitPrice != nil {
 		batchProductMaterial.UnitPrice, err = decimal.NewFromString(*input.UnitPrice)
 		if err != nil {
 			return errors.New("invalid unit price")
 		}
+		batchProductMaterial.TotalCost = batchProductMaterial.Quantity.Mul(batchProductMaterial.UnitPrice)
 	}
-	if input.Stock != nil {
-		batchProductMaterial.Stock, err = decimal.NewFromString(*input.Stock)
+
+	if input.Quantity != nil && batchProductMaterial.Stock.Equal(batchProductMaterial.Quantity) {
+		batchProductMaterial.Quantity, err = decimal.NewFromString(*input.Quantity)
 		if err != nil {
-			return errors.New("invalid stock")
+			return errors.New("invalid quantity")
 		}
+		batchProductMaterial.Stock = batchProductMaterial.Quantity
+		batchProductMaterial.TotalCost = batchProductMaterial.Quantity.Mul(batchProductMaterial.UnitPrice)
+	}
+
+	if input.ProductID != nil && batchProductMaterial.Stock.Equal(batchProductMaterial.Quantity) {
+		product, err := s.productRepo.FindByID(*input.ProductID)
+		if err != nil {
+			return err
+		}
+		batchProductMaterial.ProductID = product.ID
 	}
 
 	return s.repo.update(batchProductMaterial)
