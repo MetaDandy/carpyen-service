@@ -59,6 +59,18 @@ ALTER TABLE project_batch_product_material
     ALTER COLUMN unit_price TYPE NUMERIC(19, 4) USING unit_price::NUMERIC(19, 4),
     ALTER COLUMN total_price TYPE NUMERIC(19, 4) USING total_price::NUMERIC(19, 4);
 
+-- BatchMaterialSupplier table - Quantity field
+ALTER TABLE batch_material_supplier
+    ALTER COLUMN quantity TYPE NUMERIC(19, 4) USING quantity::NUMERIC(19, 4);
+
+-- BatchProductSupplier table - Quantity field
+ALTER TABLE batch_product_supplier
+    ALTER COLUMN quantity TYPE NUMERIC(19, 4) USING quantity::NUMERIC(19, 4);
+
+-- BatchProductMaterial table - Quantity field
+ALTER TABLE batch_product_material
+    ALTER COLUMN quantity TYPE NUMERIC(19, 4) USING quantity::NUMERIC(19, 4);
+
 -- +goose Down
 -- Revertir a la precisión anterior si es necesario
 
@@ -118,3 +130,15 @@ ALTER TABLE project_batch_product_material
     ALTER COLUMN quantity TYPE NUMERIC(15, 3) USING quantity::NUMERIC(15, 3),
     ALTER COLUMN unit_price TYPE NUMERIC(15, 3) USING unit_price::NUMERIC(15, 3),
     ALTER COLUMN total_price TYPE NUMERIC(15, 3) USING total_price::NUMERIC(15, 3);
+
+-- BatchMaterialSupplier table - Quantity field
+ALTER TABLE batch_material_supplier
+    ALTER COLUMN quantity TYPE BIGINT USING quantity::BIGINT;
+
+-- BatchProductSupplier table - Quantity field
+ALTER TABLE batch_product_supplier
+    ALTER COLUMN quantity TYPE BIGINT USING quantity::BIGINT;
+
+-- BatchProductMaterial table - Quantity field
+ALTER TABLE batch_product_material
+    ALTER COLUMN quantity TYPE BIGINT USING quantity::BIGINT;
