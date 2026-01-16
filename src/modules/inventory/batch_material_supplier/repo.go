@@ -28,17 +28,18 @@ func (r *repo) create(m model.BatchMaterialSupplier) error {
 }
 func (r *repo) findByID(id string) (model.BatchMaterialSupplier, error) {
 	var batchMaterialSupplier model.BatchMaterialSupplier
-	err := r.db.Preload("User").First(&batchMaterialSupplier, "id = ?", id).Error
+	err := r.db.Preload("User").Preload("Material").Preload("Supplier").First(&batchMaterialSupplier, "id = ?", id).Error
 	return batchMaterialSupplier, err
 }
 
 func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.BatchMaterialSupplier, int64, error) {
 	var finded []model.BatchMaterialSupplier
+
 	query := r.db.Model(model.BatchMaterialSupplier{})
 	var total int64
 	query, total = opts.ApplyFindAllOptions(query)
 
-	err := query.Find(&finded).Error
+	err := query.Preload("Supplier").Preload("Material").Find(&finded).Error
 	return finded, total, err
 }
 

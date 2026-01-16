@@ -43,11 +43,11 @@ func (s *service) create(input Create, userID string) error {
 	supplier.ID = uuid.New()
 	supplier.UserID = user.ID
 
-	return s.repo.create(supplier)
+	return s.repo.Create(supplier)
 }
 
 func (s *service) findByID(id string) (*response.Supplier, error) {
-	supplier, err := s.repo.findByID(id)
+	supplier, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (s *service) findByID(id string) (*response.Supplier, error) {
 }
 
 func (s *service) findAll(opts *helper.FindAllOptions) (*response.Paginated[response.Supplier], error) {
-	finded, total, err := s.repo.findAll(opts)
+	finded, total, err := s.repo.FindAll(opts)
 	if err != nil {
 		return nil, err
 	}
@@ -77,20 +77,20 @@ func (s *service) findAll(opts *helper.FindAllOptions) (*response.Paginated[resp
 }
 
 func (s *service) update(id string, input Update) error {
-	supplier, err := s.repo.findByID(id)
+	supplier, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
 	}
 
 	copier.CopyWithOption(&supplier, &input, copier.Option{IgnoreEmpty: true})
 
-	return s.repo.update(supplier)
+	return s.repo.Update(supplier)
 }
 
 func (s *service) softDelete(id string) error {
-	return s.repo.softDelete(id)
+	return s.repo.SoftDelete(id)
 }
 
 func (s *service) validateChiefInstaller(id string, iduser string) error {
-	return s.repo.validateChiefInstaller(id, iduser)
+	return s.repo.ValidateChiefInstaller(id, iduser)
 }

@@ -7,13 +7,13 @@ import (
 )
 
 type Repo interface {
-	create(m model.Supplier) error
-	findByID(id string) (model.Supplier, error)
-	findAll(opts *helper.FindAllOptions) ([]model.Supplier, int64, error)
-	update(m model.Supplier) error
-	softDelete(id string) error
+	Create(m model.Supplier) error
+	FindByID(id string) (model.Supplier, error)
+	FindAll(opts *helper.FindAllOptions) ([]model.Supplier, int64, error)
+	Update(m model.Supplier) error
+	SoftDelete(id string) error
 
-	validateChiefInstaller(id string, iduser string) error
+	ValidateChiefInstaller(id string, iduser string) error
 }
 
 type repo struct {
@@ -24,17 +24,17 @@ func NewRepo(db *gorm.DB) Repo {
 	return &repo{db: db}
 }
 
-func (r *repo) create(m model.Supplier) error {
+func (r *repo) Create(m model.Supplier) error {
 	return r.db.Create(&m).Error
 }
 
-func (r *repo) findByID(id string) (model.Supplier, error) {
+func (r *repo) FindByID(id string) (model.Supplier, error) {
 	var supplier model.Supplier
 	err := r.db.Preload("User").First(&supplier, "id = ?", id).Error
 	return supplier, err
 }
 
-func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Supplier, int64, error) {
+func (r *repo) FindAll(opts *helper.FindAllOptions) ([]model.Supplier, int64, error) {
 	var finded []model.Supplier
 	query := r.db.Model(model.Supplier{})
 	var total int64
@@ -44,15 +44,15 @@ func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Supplier, int64, er
 	return finded, total, err
 }
 
-func (r *repo) update(m model.Supplier) error {
+func (r *repo) Update(m model.Supplier) error {
 	return r.db.Save(&m).Error
 }
 
-func (r *repo) softDelete(id string) error {
+func (r *repo) SoftDelete(id string) error {
 	return r.db.Delete(&model.Supplier{}, "id = ?", id).Error
 }
 
-func (r *repo) validateChiefInstaller(id string, iduser string) error {
+func (r *repo) ValidateChiefInstaller(id string, iduser string) error {
 	var supplier model.Supplier
 	return r.db.
 		Where("id = ? AND user_id = ?", id, iduser).

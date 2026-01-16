@@ -41,7 +41,7 @@ func SetupContainer() *Container {
 	productHandler := product.NewProductHandler(productService)
 
 	batchMaterialSupplierRepo := batchmaterialsupplier.NewRepo(config.DB)
-	batchMaterialSupplierService := batchmaterialsupplier.NewService(batchMaterialSupplierRepo, userRepo)
+	batchMaterialSupplierService := batchmaterialsupplier.NewService(batchMaterialSupplierRepo, userRepo, materialRepo, supplierRepo)
 	batchMaterialSupplierHandler := batchmaterialsupplier.NewBatchMaterialSupplierHandler(batchMaterialSupplierService)
 
 	return &Container{

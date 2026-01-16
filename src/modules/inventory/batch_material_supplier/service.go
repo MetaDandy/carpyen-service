@@ -7,7 +7,6 @@ import (
 	"github.com/MetaDandy/carpyen-service/src/model"
 	"github.com/MetaDandy/carpyen-service/src/response"
 	"github.com/google/uuid"
-	"github.com/jinzhu/copier"
 	"github.com/shopspring/decimal"
 )
 
@@ -24,13 +23,23 @@ type UserRepo interface {
 	FindByID(id string) (model.User, error)
 }
 
-type service struct {
-	repo     Repo
-	userRepo UserRepo
+type MaterialRepo interface {
+	FindByID(id string) (model.Material, error)
 }
 
-func NewService(repo Repo, userRepo UserRepo) Service {
-	return &service{repo: repo, userRepo: userRepo}
+type SupplierRepo interface {
+	FindByID(id string) (model.Supplier, error)
+}
+
+type service struct {
+	repo         Repo
+	userRepo     UserRepo
+	materialRepo MaterialRepo
+	supplierRepo SupplierRepo
+}
+
+func NewService(repo Repo, userRepo UserRepo, materialRepo MaterialRepo, supplierRepo SupplierRepo) Service {
+	return &service{repo: repo, userRepo: userRepo, materialRepo: materialRepo, supplierRepo: supplierRepo}
 }
 
 func (s *service) Create(input Create, userID string) error {
@@ -40,15 +49,35 @@ func (s *service) Create(input Create, userID string) error {
 		return err
 	}
 
+	material, err := s.materialRepo.FindByID(input.MaterialID)
+	if err != nil {
+		return err
+	}
+
+	supplier, err := s.supplierRepo.FindByID(input.SupplierID)
+	if err != nil {
+		return err
+	}
+
 	batchmaterialsupplier := model.BatchMaterialSupplier{}
-	copier.Copy(&batchmaterialsupplier, &input)
 	batchmaterialsupplier.ID = uuid.New()
 	batchmaterialsupplier.UserID = user.ID
+	batchmaterialsupplier.MaterialID = material.ID
+	batchmaterialsupplier.SupplierID = supplier.ID
 
 	batchmaterialsupplier.UnitPrice, err = decimal.NewFromString(input.UnitPrice)
 	if err != nil {
 		return errors.New("invalid unit price")
 	}
+
+	batchmaterialsupplier.Quantity, err = decimal.NewFromString(input.Quantity)
+	if err != nil {
+		return errors.New("invalid quantity")
+	}
+
+	batchmaterialsupplier.Stock = batchmaterialsupplier.Quantity
+
+	batchmaterialsupplier.TotalCost = batchmaterialsupplier.Quantity.Mul(batchmaterialsupplier.UnitPrice)
 
 	return s.repo.create(batchmaterialsupplier)
 }
@@ -88,15 +117,40 @@ func (s *service) Update(id string, input Update) error {
 		return err
 	}
 
-	copier.CopyWithOption(&batchmaterialsupplier, &input, copier.Option{IgnoreEmpty: true})
-
 	if input.UnitPrice != nil {
 		batchmaterialsupplier.UnitPrice, err = decimal.NewFromString(*input.UnitPrice)
 		if err != nil {
 			return errors.New("invalid unit price")
 		}
+		batchmaterialsupplier.TotalCost = batchmaterialsupplier.Quantity.Mul(batchmaterialsupplier.UnitPrice)
 	}
 
+	if input.Quantity != nil && batchmaterialsupplier.Stock.Equal(batchmaterialsupplier.Quantity) {
+		batchmaterialsupplier.Quantity, err = decimal.NewFromString(*input.Quantity)
+		if err != nil {
+			return errors.New("invalid quantity")
+		}
+		batchmaterialsupplier.Stock = batchmaterialsupplier.Quantity
+		batchmaterialsupplier.TotalCost = batchmaterialsupplier.Quantity.Mul(batchmaterialsupplier.UnitPrice)
+	}
+
+	if input.MaterialID != nil && batchmaterialsupplier.Stock.Equal(batchmaterialsupplier.Quantity) {
+		material, err := s.materialRepo.FindByID(*input.MaterialID)
+		if err != nil {
+			return err
+		}
+		batchmaterialsupplier.MaterialID = material.ID
+		batchmaterialsupplier.Material = material
+	}
+
+	if input.SupplierID != nil && batchmaterialsupplier.Stock.Equal(batchmaterialsupplier.Quantity) {
+		supplier, err := s.supplierRepo.FindByID(*input.SupplierID)
+		if err != nil {
+			return err
+		}
+		batchmaterialsupplier.SupplierID = supplier.ID
+		batchmaterialsupplier.Supplier = supplier
+	}
 	return s.repo.update(batchmaterialsupplier)
 }
 

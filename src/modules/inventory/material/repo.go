@@ -7,13 +7,12 @@ import (
 )
 
 type Repo interface {
-	create(m model.Material) error
-	findByID(id string) (model.Material, error)
-	findAll(opts *helper.FindAllOptions) ([]model.Material, int64, error)
-	update(m model.Material) error
-	softDelete(id string) error
-
-	validateInstaller(id string, iduser string) error
+	Create(m model.Material) error
+	FindByID(id string) (model.Material, error)
+	FindAll(opts *helper.FindAllOptions) ([]model.Material, int64, error)
+	Update(m model.Material) error
+	SoftDelete(id string) error
+	ValidateInstaller(id string, iduser string) error
 }
 
 type repo struct {
@@ -24,17 +23,17 @@ func NewRepo(db *gorm.DB) Repo {
 	return &repo{db: db}
 }
 
-func (r *repo) create(m model.Material) error {
+func (r *repo) Create(m model.Material) error {
 	return r.db.Create(&m).Error
 }
 
-func (r *repo) findByID(id string) (model.Material, error) {
+func (r *repo) FindByID(id string) (model.Material, error) {
 	var material model.Material
 	err := r.db.Preload("User").First(&material, "id = ?", id).Error
 	return material, err
 }
 
-func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Material, int64, error) {
+func (r *repo) FindAll(opts *helper.FindAllOptions) ([]model.Material, int64, error) {
 	var finded []model.Material
 	query := r.db.Model(model.Material{})
 	var total int64
@@ -44,15 +43,15 @@ func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Material, int64, er
 	return finded, total, err
 }
 
-func (r *repo) update(m model.Material) error {
+func (r *repo) Update(m model.Material) error {
 	return r.db.Save(&m).Error
 }
 
-func (r *repo) softDelete(id string) error {
+func (r *repo) SoftDelete(id string) error {
 	return r.db.Delete(&model.Material{}, "id = ?", id).Error
 }
 
-func (r *repo) validateInstaller(id string, iduser string) error {
+func (r *repo) ValidateInstaller(id string, iduser string) error {
 	var material model.Material
 	return r.db.
 		Where("id = ? AND user_id = ?", id, iduser).
