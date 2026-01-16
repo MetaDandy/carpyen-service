@@ -61,7 +61,7 @@ func (s *service) Create(input Create, userID string) error {
 }
 
 func (s *service) FindByID(id string) (*response.Material, error) {
-	material, err := s.repo.findByID(id)
+	material, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[resp
 	return paginated, nil
 }
 func (s *service) Update(id string, input Update) error {
-	material, err := s.repo.findByID(id)
+	material, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
 	}

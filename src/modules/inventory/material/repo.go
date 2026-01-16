@@ -8,7 +8,7 @@ import (
 
 type Repo interface {
 	create(m model.Material) error
-	findByID(id string) (model.Material, error)
+	FindByID(id string) (model.Material, error)
 	findAll(opts *helper.FindAllOptions) ([]model.Material, int64, error)
 	update(m model.Material) error
 	softDelete(id string) error
@@ -28,7 +28,7 @@ func (r *repo) create(m model.Material) error {
 	return r.db.Create(&m).Error
 }
 
-func (r *repo) findByID(id string) (model.Material, error) {
+func (r *repo) FindByID(id string) (model.Material, error) {
 	var material model.Material
 	err := r.db.Preload("User").First(&material, "id = ?", id).Error
 	return material, err
