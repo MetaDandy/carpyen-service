@@ -54,7 +54,7 @@ func (s *service) Create(input Create, userID string) error {
 	product.ID = uuid.New()
 	product.UserID = user.ID
 
-	return s.repo.create(product)
+	return s.repo.Create(product)
 }
 
 func (s *service) FindByID(id string) (*response.Product, error) {
@@ -68,7 +68,7 @@ func (s *service) FindByID(id string) (*response.Product, error) {
 }
 
 func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Product], error) {
-	finded, total, err := s.repo.findAll(opts)
+	finded, total, err := s.repo.FindAll(opts)
 	if err != nil {
 		return nil, err
 	}
@@ -105,13 +105,13 @@ func (s *service) Update(id string, input Update) error {
 		}
 	}
 
-	return s.repo.update(product)
+	return s.repo.Update(product)
 }
 
 func (s *service) SoftDelete(id string) error {
-	return s.repo.softDelete(id)
+	return s.repo.SoftDelete(id)
 }
 
 func (s *service) ValidateInstaller(id string, iduser string) error {
-	return s.repo.validateInstaller(id, iduser)
+	return s.repo.ValidateInstaller(id, iduser)
 }

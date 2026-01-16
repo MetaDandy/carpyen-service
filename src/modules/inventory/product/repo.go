@@ -7,13 +7,12 @@ import (
 )
 
 type Repo interface {
-	create(m model.Product) error
+	Create(m model.Product) error
 	FindByID(id string) (model.Product, error)
-	findAll(opts *helper.FindAllOptions) ([]model.Product, int64, error)
-	update(m model.Product) error
-	softDelete(id string) error
-
-	validateInstaller(id string, iduser string) error
+	FindAll(opts *helper.FindAllOptions) ([]model.Product, int64, error)
+	Update(m model.Product) error
+	SoftDelete(id string) error
+	ValidateInstaller(id string, iduser string) error
 }
 
 type repo struct {
@@ -24,7 +23,7 @@ func NewRepo(db *gorm.DB) Repo {
 	return &repo{db: db}
 }
 
-func (r *repo) create(m model.Product) error {
+func (r *repo) Create(m model.Product) error {
 	return r.db.Create(&m).Error
 }
 
@@ -34,7 +33,7 @@ func (r *repo) FindByID(id string) (model.Product, error) {
 	return product, err
 }
 
-func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Product, int64, error) {
+func (r *repo) FindAll(opts *helper.FindAllOptions) ([]model.Product, int64, error) {
 	var finded []model.Product
 	query := r.db.Model(model.Product{})
 	var total int64
@@ -44,15 +43,15 @@ func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.Product, int64, err
 	return finded, total, err
 }
 
-func (r *repo) update(m model.Product) error {
+func (r *repo) Update(m model.Product) error {
 	return r.db.Save(&m).Error
 }
 
-func (r *repo) softDelete(id string) error {
+func (r *repo) SoftDelete(id string) error {
 	return r.db.Delete(&model.Product{}, "id = ?", id).Error
 }
 
-func (r *repo) validateInstaller(id string, iduser string) error {
+func (r *repo) ValidateInstaller(id string, iduser string) error {
 	var product model.Product
 	return r.db.
 		Where("id = ? AND user_id = ?", id, iduser).

@@ -27,6 +27,14 @@ func Load() {
 		Port = "8001"
 	}
 
+	//enviroment
+	environment := os.Getenv("ENVIROMENT")
+	if environment == "" {
+		environment = "DEV"
+	}
+
+	runMigration := os.Getenv("RUN_MIGRATION") == "true"
+
 	maxRetries := 10
 	for i := range maxRetries {
 		dns := os.Getenv("DATABASE_URL")
@@ -34,9 +42,9 @@ func Load() {
 			log.Fatal("DATABASE_URL not set in .env file")
 		}
 
-		log.Println("Running migrations...")
-		Migrate(dns)
-		log.Println("Migrations completed")
+		if runMigration {
+			Migrate(dns)
+		}
 
 		log.Println("Connecting to database...")
 		// Agregar parámetros para Neon: timeouts y connection pooling
@@ -49,9 +57,11 @@ func Load() {
 			sqlDB.SetMaxOpenConns(20)
 			sqlDB.SetConnMaxLifetime(time.Hour)
 			log.Printf("Database connected successfully after %d attempt(s)", i+1)
-			log.Println("Starting database seeding...")
-			seed.Seeder(DB)
-			log.Println("Database seeding completed")
+			if environment == "DEV" {
+				seed.Seeder(DB)
+			} else {
+				log.Println("Seeds deshabilited in PROD")
+			}
 			return
 		}
 

@@ -4,7 +4,9 @@ import (
 	"github.com/MetaDandy/carpyen-service/config"
 	"github.com/MetaDandy/carpyen-service/src/core/client"
 	"github.com/MetaDandy/carpyen-service/src/core/user"
+	batchmaterialsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_material_supplier"
 	batchproductmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_material"
+	batchproductsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_supplier"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/product"
 	productmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/product_material"
@@ -12,13 +14,15 @@ import (
 )
 
 type Container struct {
-	User     user.Handler
-	Client   client.Handler
-	Supplier supplier.Handler
-	Material material.Handler
-	Product  product.Handler
-	BPM      batchproductmaterial.Handler
-	PM       productmaterial.Handler
+	User                  user.Handler
+	Client                client.Handler
+	Supplier              supplier.Handler
+	Material              material.Handler
+	Product               product.Handler
+	BatchMaterialSupplier batchmaterialsupplier.Handler
+	BatchProductSupplier  batchproductsupplier.Handler
+	BPM                   batchproductmaterial.Handler
+	PM                    productmaterial.Handler
 }
 
 func SetupContainer() *Container {
@@ -42,6 +46,14 @@ func SetupContainer() *Container {
 	productService := product.NewService(productRepo, userRepo)
 	productHandler := product.NewProductHandler(productService)
 
+	batchMaterialSupplierRepo := batchmaterialsupplier.NewRepo(config.DB)
+	batchMaterialSupplierService := batchmaterialsupplier.NewService(batchMaterialSupplierRepo, userRepo, materialRepo, supplierRepo)
+	batchMaterialSupplierHandler := batchmaterialsupplier.NewBatchMaterialSupplierHandler(batchMaterialSupplierService)
+
+	batchProductSupplierRepo := batchproductsupplier.NewRepo(config.DB)
+	batchProductSupplierService := batchproductsupplier.NewService(batchProductSupplierRepo, userRepo, productRepo, supplierRepo)
+	batchProductSupplierHandler := batchproductsupplier.NewBatchProductSupplierHandler(batchProductSupplierService)
+
 	bpmRepo := batchproductmaterial.NewRepo(config.DB)
 	bpmService := batchproductmaterial.NewService(bpmRepo, userRepo, productRepo)
 	bpmHandler := batchproductmaterial.NewBatchProductMaterialHandler(bpmService)
@@ -51,12 +63,14 @@ func SetupContainer() *Container {
 	pmHandler := productmaterial.NewHandler(pmService)
 
 	return &Container{
-		User:     userHandler,
-		Client:   clientHandler,
-		Supplier: supplierHandler,
-		Material: materialHandler,
-		Product:  productHandler,
-		BPM:      bpmHandler,
-		PM:       pmHandler,
+		User:                  userHandler,
+		Client:                clientHandler,
+		Supplier:              supplierHandler,
+		Material:              materialHandler,
+		Product:               productHandler,
+		BatchMaterialSupplier: batchMaterialSupplierHandler,
+		BatchProductSupplier:  batchProductSupplierHandler,
+		BPM:                   bpmHandler,
+		PM:                    pmHandler,
 	}
 }

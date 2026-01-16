@@ -57,7 +57,7 @@ func (s *service) Create(input Create, userID string) error {
 		return errors.New("invalid unit price")
 	}
 
-	return s.repo.create(material)
+	return s.repo.Create(material)
 }
 
 func (s *service) FindByID(id string) (*response.Material, error) {
@@ -71,7 +71,7 @@ func (s *service) FindByID(id string) (*response.Material, error) {
 }
 
 func (s *service) FindAll(opts *helper.FindAllOptions) (*response.Paginated[response.Material], error) {
-	finded, total, err := s.repo.findAll(opts)
+	finded, total, err := s.repo.FindAll(opts)
 	if err != nil {
 		return nil, err
 	}
@@ -111,13 +111,13 @@ func (s *service) Update(id string, input Update) error {
 		}
 	}
 
-	return s.repo.update(material)
+	return s.repo.Update(material)
 }
 
 func (s *service) SoftDelete(id string) error {
-	return s.repo.softDelete(id)
+	return s.repo.SoftDelete(id)
 }
 
 func (s *service) ValidateInstaller(id string, iduser string) error {
-	return s.repo.validateInstaller(id, iduser)
+	return s.repo.ValidateInstaller(id, iduser)
 }

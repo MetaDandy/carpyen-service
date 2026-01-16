@@ -13,6 +13,7 @@ type BatchProductSupplier struct {
 	Quantity   decimal.Decimal
 	UnitPrice  decimal.Decimal
 	TotalPrice decimal.Decimal
+	Stock      decimal.Decimal
 
 	ProductID uuid.UUID `gorm:"type:uuid;"`
 	Product   Product   `gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
