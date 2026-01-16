@@ -71,6 +71,10 @@ ALTER TABLE batch_product_supplier
 ALTER TABLE batch_product_material
     ALTER COLUMN quantity TYPE NUMERIC(19, 4) USING quantity::NUMERIC(19, 4);
 
+ALTER TABLE product_material
+    ALTER COLUMN quantity TYPE NUMERIC(19, 4) USING quantity::NUMERIC(19, 4);
+
+
 -- +goose Down
 -- Revertir a la precisión anterior si es necesario
 
@@ -141,4 +145,7 @@ ALTER TABLE batch_product_supplier
 
 -- BatchProductMaterial table - Quantity field
 ALTER TABLE batch_product_material
+    ALTER COLUMN quantity TYPE BIGINT USING quantity::BIGINT;
+
+ALTER TABLE product_material
     ALTER COLUMN quantity TYPE BIGINT USING quantity::BIGINT;

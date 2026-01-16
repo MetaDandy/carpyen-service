@@ -46,8 +46,16 @@ func Load() {
 			Migrate(dns)
 		}
 
-		DB, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+		log.Println("Connecting to database...")
+		// Agregar parámetros para Neon: timeouts y connection pooling
+		dsn := dns + "?sslmode=require&connect_timeout=30"
+		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err == nil {
+			// Configurar connection pool
+			sqlDB, _ := DB.DB()
+			sqlDB.SetMaxIdleConns(5)
+			sqlDB.SetMaxOpenConns(20)
+			sqlDB.SetConnMaxLifetime(time.Hour)
 			log.Printf("Database connected successfully after %d attempt(s)", i+1)
 			if environment == "DEV" {
 				seed.Seeder(DB)

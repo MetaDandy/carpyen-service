@@ -18,6 +18,8 @@ func SetupApi(app *fiber.App, c *src.Container) {
 		c.Supplier.RegisterRoutes,
 		c.Material.RegisterRoutes,
 		c.Product.RegisterRoutes,
+		c.BPM.RegisterRoutes,
+		c.PM.RegisterRoutes,
 		c.BatchMaterialSupplier.RegisterRoutes,
 		c.BatchProductSupplier.RegisterRoutes,
 	}

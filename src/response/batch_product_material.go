@@ -1,53 +1,43 @@
 package response
 
-import (
-	"github.com/MetaDandy/carpyen-service/src/model"
-	"github.com/google/uuid"
-)
+import "github.com/MetaDandy/carpyen-service/src/model"
 
-type BatchProductSupplier struct {
-	ID         string `json:"id"`
-	Quantity   string `json:"quantity"`
-	UnitPrice  string `json:"unit_price"`
-	TotalPrice string `json:"total_cost"`
-	Stock      string `json:"stock"`
+type BatchProductMaterial struct {
+	ID        string `json:"id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	TotalCost string `json:"total_cost"`
+	Stock     string `json:"stock"`
 
-	Product  *Product  `json:"product"`
-	Supplier *Supplier `json:"supplier"`
-	User     *User     `json:"user,omitzero"`
+	Product Product           `json:"product"`
+	User    User              `json:"user"`
+	PM      []ProductMaterial `json:"product_material"`
+
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
-func BatchProductSupplierToDto(m *model.BatchProductSupplier) BatchProductSupplier {
-	dto := BatchProductSupplier{
-		ID:         m.ID.String(),
-		Quantity:   m.Quantity.String(),
-		UnitPrice:  m.UnitPrice.String(),
-		TotalPrice: m.TotalPrice.String(),
-		Stock:      m.Stock.String(),
-	}
+func BatchProductMaterialToDto(bpm *model.BatchProductMaterial) BatchProductMaterial {
+	return BatchProductMaterial{
+		ID:        bpm.ID.String(),
+		Quantity:  bpm.Quantity.String(),
+		UnitPrice: bpm.UnitPrice.String(),
+		TotalCost: bpm.TotalCost.String(),
+		Stock:     bpm.Stock.String(),
 
-	if m.Product.ID != (uuid.UUID{}) {
-		mat := ProductToDto(&m.Product)
-		dto.Product = &mat
-	}
+		Product: ProductToDto(&bpm.Product),
+		User:    UserToDto(&bpm.User),
+		PM:      ProductMaterialToListDto(bpm.ProductMaterials),
 
-	if m.Supplier.ID != (uuid.UUID{}) {
-		sup := SupplierToDto(&m.Supplier)
-		dto.Supplier = &sup
+		CreatedAt: bpm.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt: bpm.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
-
-	if m.User.ID != (uuid.UUID{}) {
-		usr := UserToDto(&m.User)
-		dto.User = &usr
-	}
-
-	return dto
 }
 
-func BatchProductSupplierToListDto(m []model.BatchProductSupplier) []BatchProductSupplier {
-	out := make([]BatchProductSupplier, len(m))
-	for i, item := range m {
-		out[i] = BatchProductSupplierToDto(&item)
+func BatchProductMaterialToListDto(bpm []model.BatchProductMaterial) []BatchProductMaterial {
+	result := make([]BatchProductMaterial, len(bpm))
+	for i, v := range bpm {
+		result[i] = BatchProductMaterialToDto(&v)
 	}
-	return out
+	return result
 }
