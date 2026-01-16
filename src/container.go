@@ -7,6 +7,7 @@ import (
 	batchproductmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/product"
+	productmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/product_material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/supplier"
 )
 
@@ -17,6 +18,7 @@ type Container struct {
 	Material material.Handler
 	Product  product.Handler
 	BPM      batchproductmaterial.Handler
+	PM       productmaterial.Handler
 }
 
 func SetupContainer() *Container {
@@ -44,6 +46,10 @@ func SetupContainer() *Container {
 	bpmService := batchproductmaterial.NewService(bpmRepo, userRepo, productRepo)
 	bpmHandler := batchproductmaterial.NewBatchProductMaterialHandler(bpmService)
 
+	pmRepo := productmaterial.NewRepo(config.DB)
+	pmService := productmaterial.NewService(pmRepo, bpmRepo, materialRepo)
+	pmHandler := productmaterial.NewHandler(pmService)
+
 	return &Container{
 		User:     userHandler,
 		Client:   clientHandler,
@@ -51,5 +57,6 @@ func SetupContainer() *Container {
 		Material: materialHandler,
 		Product:  productHandler,
 		BPM:      bpmHandler,
+		PM:       pmHandler,
 	}
 }

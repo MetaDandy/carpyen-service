@@ -34,6 +34,7 @@ func (r *repo) FindByID(id string) (model.BatchProductMaterial, error) {
 		Preload("Product").
 		Preload("User").
 		Preload("ProductMaterials").
+		Preload("ProductMaterials.Material").
 		First(&batchProductMaterial, "id = ?", id).Error
 	return batchProductMaterial, err
 }

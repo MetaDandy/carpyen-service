@@ -109,6 +109,7 @@ func (s *service) Update(id string, input Update) error {
 			return err
 		}
 		productMaterial.MaterialID = material.ID
+		productMaterial.Material = material
 	}
 
 	return s.repo.Update(productMaterial)

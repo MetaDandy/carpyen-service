@@ -130,6 +130,7 @@ func (s *service) Update(id string, input Update) error {
 			return err
 		}
 		batchProductMaterial.ProductID = product.ID
+		batchProductMaterial.Product = product
 	}
 
 	return s.repo.update(batchProductMaterial)

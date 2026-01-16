@@ -29,21 +29,23 @@ func (h *handler) RegisterRoutes(router fiber.Router) {
 
 	batchProductMaterial.Use(middleware.Jwt())
 
+	roles := []enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}
+
 	batchProductMaterial.Post(
 		"/",
-		middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}),
+		middleware.RequireRole(roles),
 		h.Create,
 	)
 	batchProductMaterial.Get("/", h.FindAll)
 	batchProductMaterial.Get("/:id", h.FindByID)
 	batchProductMaterial.Patch(
 		"/:id",
-		middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}),
+		middleware.RequireRole(roles),
 		h.Update,
 	)
 	batchProductMaterial.Delete(
 		"/:id",
-		middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}),
+		middleware.RequireRole(roles),
 		h.SoftDelete,
 	)
 }

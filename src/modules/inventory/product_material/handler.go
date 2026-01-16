@@ -2,6 +2,8 @@ package productmaterial
 
 import (
 	"github.com/MetaDandy/carpyen-service/helper"
+	"github.com/MetaDandy/carpyen-service/middleware"
+	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -24,10 +26,14 @@ func NewHandler(service Service) Handler {
 func (h *handler) RegisterRoutes(routes fiber.Router) {
 	productMaterial := routes.Group("/product-materials")
 
-	productMaterial.Post("/", h.Create)
+	roles := []enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}
+
+	productMaterial.Use(middleware.Jwt())
+
+	productMaterial.Post("/", middleware.RequireRole(roles), h.Create)
 	productMaterial.Get("/:id", h.FindAll)
-	productMaterial.Patch("/:id", h.Update)
-	productMaterial.Delete("/:id", h.Delete)
+	productMaterial.Patch("/:id", middleware.RequireRole(roles), h.Update)
+	productMaterial.Delete("/:id", middleware.RequireRole(roles), h.Delete)
 }
 
 func (h *handler) Create(c *fiber.Ctx) error {
