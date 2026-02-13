@@ -19,9 +19,12 @@ func main() {
 	app.Use(middleware.Logger())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: os.Getenv("ALLOW_ORIGINS"),
-		AllowMethods: "GET,POST,PATCH,DELETE,OPTIONS",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowOrigins:     os.Getenv("ALLOW_ORIGINS"),
+		AllowMethods:     "GET,POST,PATCH,DELETE,OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true, // ← IMPORTANTE: permite credenciales (cookies)
+		ExposeHeaders:    "Content-Type",
+		MaxAge:           3600,
 	}))
 
 	log.Println("Setting up container...")

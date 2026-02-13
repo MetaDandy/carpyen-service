@@ -12,7 +12,7 @@ import (
 )
 
 type Service interface {
-	Login(input Login) (string, error)
+	Login(input Login) (*response.User, error)
 	Create(input Create) error
 	Update(id string, input Update) error
 	UpdateProfile(id string, input UpdateProfile) error
@@ -29,22 +29,18 @@ func NewService(repo Repo) Service {
 	return &service{repo: repo}
 }
 
-func (s *service) Login(input Login) (string, error) {
+func (s *service) Login(input Login) (*response.User, error) {
 	user, err := s.repo.FindByEmail(input.Email)
 	if err != nil {
-		return "", fmt.Errorf("invalid credentials")
+		return nil, fmt.Errorf("invalid credentials")
 	}
 
 	if !helper.CheckPasswordHash(input.Password, user.Password) {
-		return "", fmt.Errorf("invalid credentials")
+		return nil, fmt.Errorf("invalid credentials")
 	}
 
-	token, err := helper.GenerateJwt(user.ID.String(), user.Email, user.Role.String())
-	if err != nil {
-		return "", err
-	}
-
-	return token, nil
+	dto := response.UserToDto(&user)
+	return &dto, nil
 }
 
 func (s *service) Create(input Create) error {

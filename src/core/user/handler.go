@@ -10,6 +10,8 @@ import (
 type Handler interface {
 	RegisterRoutes(router fiber.Router)
 	Login(c *fiber.Ctx) error
+	Logout(c *fiber.Ctx) error
+	RefreshToken(c *fiber.Ctx) error
 	Create(c *fiber.Ctx) error
 	Edit(c *fiber.Ctx) error
 	EditProfile(c *fiber.Ctx) error
@@ -32,6 +34,8 @@ func NewUserHandler(service Service) Handler {
 func (h *handler) RegisterRoutes(router fiber.Router) {
 	users := router.Group("/users")
 	users.Post("/login", h.Login)
+	users.Post("/refresh", h.RefreshToken) // Renovar access token
+	users.Post("/logout", h.Logout)
 
 	users.Use(middleware.Jwt())
 
@@ -50,14 +54,108 @@ func (h *handler) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid input")
 	}
 
-	token, err := h.service.Login(input)
+	user, err := h.service.Login(input)
 	if err != nil {
 		return fiber.NewError(fiber.StatusUnauthorized, "Invalid credentials")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"token": token,
+	// Generar AMBOS tokens (Access + Refresh)
+	tokenPair, err := helper.GenerateTokenPair(user.ID, user.Email, user.Role)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Could not generate tokens")
+	}
+
+	// Access Token: httpOnly, 1 hora
+	c.Cookie(&fiber.Cookie{
+		Name:     "accessToken",
+		Value:    tokenPair.AccessToken,
+		HTTPOnly: true,
+		Secure:   false, // Cambiar a true en producción con HTTPS
+		SameSite: "Strict",
+		MaxAge:   3600, // 1 hora
+		Path:     "/",
 	})
+
+	// Refresh Token: httpOnly, 7 días, más seguro
+	c.Cookie(&fiber.Cookie{
+		Name:     "refreshToken",
+		Value:    tokenPair.RefreshToken,
+		HTTPOnly: true,
+		Secure:   false, // Cambiar a true en producción con HTTPS
+		SameSite: "Strict",
+		MaxAge:   7 * 24 * 3600, // 7 días
+		Path:     "/",
+	})
+
+	// Retornar solo datos del usuario (sin tokens sensibles)
+	return c.Status(fiber.StatusOK).JSON(user)
+}
+
+func (h *handler) Logout(c *fiber.Ctx) error {
+	// Eliminar la cookie estableciendo MaxAge en -1
+	c.Cookie(&fiber.Cookie{
+		Name:     "accessToken",
+		Value:    "",
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Strict",
+		MaxAge:   -1, // Esto elimina la cookie
+		Path:     "/",
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refreshToken",
+		Value:    "",
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Strict",
+		MaxAge:   -1,
+		Path:     "/",
+	})
+
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func (h *handler) RefreshToken(c *fiber.Ctx) error {
+	// Leer refresh token de la cookie
+	refreshTokenString := c.Cookies("refreshToken")
+	if refreshTokenString == "" {
+		return fiber.NewError(fiber.StatusUnauthorized, "Refresh token missing")
+	}
+
+	// Validar que sea un refresh token válido
+	claims, err := helper.ValidateToken(refreshTokenString)
+	if err != nil {
+		return fiber.NewError(fiber.StatusUnauthorized, "Invalid refresh token")
+	}
+
+	// Verificar que sea realmente un refresh token
+	if tokenType, ok := claims["type"].(string); !ok || tokenType != "refresh" {
+		return fiber.NewError(fiber.StatusUnauthorized, "Invalid token type")
+	}
+
+	userID := claims["sub"].(string)
+	email := claims["email"].(string)
+	role := claims["role"].(string)
+
+	// Generar NUEVO access token
+	newAccessToken, err := helper.GenerateJwt(userID, email, role)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Could not generate token")
+	}
+
+	// Establecer nuevo access token
+	c.Cookie(&fiber.Cookie{
+		Name:     "accessToken",
+		Value:    newAccessToken,
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Strict",
+		MaxAge:   3600, // 1 hora
+		Path:     "/",
+	})
+
+	return c.SendStatus(fiber.StatusOK)
 }
 
 func (h *handler) GetByID(c *fiber.Ctx) error {
