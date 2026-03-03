@@ -22,3 +22,14 @@ func IsValidRole(role string) bool {
 	}
 	return false
 }
+
+func RoleToArray() []string {
+	return []string{
+		string(RoleAdmin),
+		string(RoleDesigner),
+		string(RoleSeller),
+		string(RoleChiefInstaller),
+		string(RoleInstaller),
+		string(RoleClient),
+	}
+}

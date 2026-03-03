@@ -27,3 +27,19 @@ func (p Product) IsValid() bool {
 func (p Product) String() string {
 	return string(p)
 }
+
+func ProductToArray() []string {
+	return []string{
+		string(Chair),
+		string(Table),
+		string(Sofa),
+		string(Bed),
+		string(Cabinet),
+		string(Desk),
+		string(Shelf),
+		string(Lamp),
+		string(Rug),
+		string(Curtain),
+		string(OtherProduct),
+	}
+}
