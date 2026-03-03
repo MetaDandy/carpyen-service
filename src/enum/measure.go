@@ -24,3 +24,15 @@ func (m Measure) IsValid() bool {
 func (m Measure) String() string {
 	return string(m)
 }
+func MeasuretoArray() []string {
+	return []string{
+		string(Meter),
+		string(SquareMeter),
+		string(MeasureUnit),
+		string(Liter),
+		string(Kilogram),
+		string(Pound),
+		string(CubicMeter),
+		string(CubicLiter),
+	}
+}

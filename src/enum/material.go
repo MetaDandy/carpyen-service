@@ -23,3 +23,15 @@ func (m Material) IsValid() bool {
 func (m Material) String() string {
 	return string(m)
 }
+
+func MaterialToArray() []string {
+	return []string{
+		string(Forniture),
+		string(Wood),
+		string(Metal),
+		string(Plastic),
+		string(Glass),
+		string(Paint),
+		string(Other),
+	}
+}

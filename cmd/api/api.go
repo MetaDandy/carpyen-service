@@ -23,6 +23,7 @@ func SetupApi(app *fiber.App, c *src.Container) {
 		c.BatchMaterialSupplier.RegisterRoutes,
 		c.BatchProductSupplier.RegisterRoutes,
 		c.Project.RegisterRoutes,
+		c.ExtraInformation.RegisterRoutes,
 	}
 
 	for _, register := range handlers {

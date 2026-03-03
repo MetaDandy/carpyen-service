@@ -3,7 +3,9 @@ package src
 import (
 	"github.com/MetaDandy/carpyen-service/config"
 	"github.com/MetaDandy/carpyen-service/src/core/client"
+	extrainformation "github.com/MetaDandy/carpyen-service/src/core/extra-information"
 	"github.com/MetaDandy/carpyen-service/src/core/user"
+
 	batchmaterialsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_material_supplier"
 	batchproductmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_material"
 	batchproductsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_supplier"
@@ -25,6 +27,7 @@ type Container struct {
 	BPM                   batchproductmaterial.Handler
 	PM                    productmaterial.Handler
 	Project               project.Handler
+	ExtraInformation      extrainformation.Handler
 }
 
 func SetupContainer() *Container {
@@ -79,5 +82,6 @@ func SetupContainer() *Container {
 		BPM:                   bpmHandler,
 		PM:                    pmHandler,
 		Project:               projectHandler,
+		ExtraInformation:      extrainformation.NewExtraInformationHandler(),
 	}
 }
