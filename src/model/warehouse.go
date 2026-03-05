@@ -3,29 +3,25 @@ package model
 import (
 	"time"
 
-	"github.com/MetaDandy/carpyen-service/src/enum"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
-type Material struct {
+type Warehouse struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Name        string
-	Type        enum.Material
-	UnitMeasure enum.Measure
-	UnitPrice   decimal.Decimal
+	Address     string
+	Description string
+	Phone       string
 
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-
-	BatchMaterials []BatchMaterial `gorm:"foreignKey:MaterialID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (Material) TableName() string {
-	return "material"
+func (Warehouse) TableName() string {
+	return "warehouse"
 }

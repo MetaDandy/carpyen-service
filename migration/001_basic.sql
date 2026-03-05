@@ -59,26 +59,32 @@ CREATE TABLE IF NOT EXISTS material (
     name VARCHAR(255) NOT NULL,
     type VARCHAR(50),
     unit_measure VARCHAR(50),
-    unit_price NUMERIC(15, 3),
+    unit_price NUMERIC(19, 4),
+    user_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    deleted_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_material_deleted_at ON material(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_material_user_id ON material(user_id);
 
 -- Product Table
 CREATE TABLE IF NOT EXISTS product (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
     type VARCHAR(50),
-    unit_price NUMERIC(15, 3),
+    unit_price NUMERIC(19, 4),
+    user_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    deleted_at TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_product_deleted_at ON product(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_product_user_id ON product(user_id);
 
 -- Project Table
 CREATE TABLE IF NOT EXISTS project (
@@ -103,7 +109,7 @@ CREATE INDEX IF NOT EXISTS idx_project_client_id ON project(client_id);
 -- Quote Table
 CREATE TABLE IF NOT EXISTS quote (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    total_cost NUMERIC(15, 3),
+    total_cost NUMERIC(19, 4),
     status VARCHAR(50),
     comments TEXT,
     valid_days INTEGER,
@@ -125,10 +131,10 @@ CREATE INDEX IF NOT EXISTS idx_quote_user_id ON quote(user_id);
 CREATE TABLE IF NOT EXISTS sub_quote (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     ambient VARCHAR(255),
-    unit_cost NUMERIC(15, 3),
-    unit_quantity NUMERIC(15, 3),
+    unit_cost NUMERIC(19, 4),
+    unit_quantity NUMERIC(19, 4),
     unit_type VARCHAR(50),
-    total_cost NUMERIC(15, 3),
+    total_cost NUMERIC(19, 4),
     status VARCHAR(50),
     description TEXT,
     quote_id UUID NOT NULL,
@@ -245,10 +251,10 @@ CREATE INDEX IF NOT EXISTS idx_service_evaluation_project_id ON service_evaluati
 -- BatchMaterialSupplier Table
 CREATE TABLE IF NOT EXISTS batch_material_supplier (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity BIGINT,
-    unit_price NUMERIC(15, 3),
-    total_cost NUMERIC(15, 3),
-    stock NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_cost NUMERIC(19, 4),
+    stock NUMERIC(19, 4),
     material_id UUID NOT NULL,
     supplier_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -268,9 +274,10 @@ CREATE INDEX IF NOT EXISTS idx_batch_material_supplier_user_id ON batch_material
 -- BatchProductSupplier Table
 CREATE TABLE IF NOT EXISTS batch_product_supplier (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity BIGINT,
-    unit_price NUMERIC(15, 3),
-    total_price NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_price NUMERIC(19, 4),
+    stock NUMERIC(19, 4) DEFAULT 0,
     product_id UUID NOT NULL,
     supplier_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -286,14 +293,15 @@ CREATE INDEX IF NOT EXISTS idx_batch_product_supplier_deleted_at ON batch_produc
 CREATE INDEX IF NOT EXISTS idx_batch_product_supplier_product_id ON batch_product_supplier(product_id);
 CREATE INDEX IF NOT EXISTS idx_batch_product_supplier_supplier_id ON batch_product_supplier(supplier_id);
 CREATE INDEX IF NOT EXISTS idx_batch_product_supplier_user_id ON batch_product_supplier(user_id);
+CREATE INDEX IF NOT EXISTS idx_batch_product_supplier_stock ON batch_product_supplier(stock);
 
 -- BatchProductMaterial Table
 CREATE TABLE IF NOT EXISTS batch_product_material (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity BIGINT,
-    unit_price NUMERIC(15, 3),
-    total_cost NUMERIC(15, 3),
-    stock NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_cost NUMERIC(19, 4),
+    stock NUMERIC(19, 4),
     product_id UUID NOT NULL,
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -310,9 +318,9 @@ CREATE INDEX IF NOT EXISTS idx_batch_product_material_user_id ON batch_product_m
 -- ProductMaterial Table
 CREATE TABLE IF NOT EXISTS product_material (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity BIGINT,
-    unit_price NUMERIC(15, 3),
-    total_cost NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_cost NUMERIC(19, 4),
     batch_product_material_id UUID NOT NULL,
     material_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -329,9 +337,9 @@ CREATE INDEX IF NOT EXISTS idx_product_material_material_id ON product_material(
 -- ProjectBatchMaterialSupplier Table
 CREATE TABLE IF NOT EXISTS project_batch_material_supplier (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity NUMERIC(15, 3),
-    unit_price NUMERIC(15, 3),
-    total_price NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_price NUMERIC(19, 4),
     project_id UUID NOT NULL,
     batch_material_supplier_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -351,9 +359,9 @@ CREATE INDEX IF NOT EXISTS idx_project_batch_material_supplier_deleted_at ON pro
 -- ProjectBatchProductSupplier Table
 CREATE TABLE IF NOT EXISTS project_batch_product_supplier (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity BIGINT,
-    unit_price NUMERIC(15, 3),
-    total_price NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_price NUMERIC(19, 4),
     project_id UUID NOT NULL,
     batch_product_supplier_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -373,9 +381,9 @@ CREATE INDEX IF NOT EXISTS idx_project_batch_product_supplier_deleted_at ON proj
 -- ProjectBatchProductMaterial Table
 CREATE TABLE IF NOT EXISTS project_batch_product_material (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    quantity NUMERIC(15, 3),
-    unit_price NUMERIC(15, 3),
-    total_price NUMERIC(15, 3),
+    quantity NUMERIC(19, 4),
+    unit_price NUMERIC(19, 4),
+    total_price NUMERIC(19, 4),
     project_id UUID NOT NULL,
     batch_product_material_id UUID NOT NULL,
     user_id UUID NOT NULL,

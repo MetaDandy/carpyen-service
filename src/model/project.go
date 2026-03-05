@@ -26,9 +26,9 @@ type Project struct {
 	Quotes             []Quote             `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Schedules          []Schedule          `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	ProjectBatchMaterialSuppliers []ProjectBatchMaterialSupplier `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ProjectBatchProductMaterials  []ProjectBatchProductMaterial  `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ProjectBatchProductSuppliers  []ProjectBatchProductSupplier  `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchMaterials        []ProjectBatchMaterial        `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchProductMaterials []ProjectBatchProductMaterial `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchProducts         []ProjectBatchProduct         `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

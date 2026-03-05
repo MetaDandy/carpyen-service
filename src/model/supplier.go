@@ -18,8 +18,7 @@ type Supplier struct {
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	BatchMaterialSuppliers []BatchMaterialSupplier `gorm:"foreignKey:SupplierID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BatchProductSuppliers  []BatchProductSupplier  `gorm:"foreignKey:SupplierID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Purchase []Purchase `gorm:"foreignKey:SupplierID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

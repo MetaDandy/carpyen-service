@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProjectBatchProductSupplier struct {
+type ProjectBatchProduct struct {
 	ID         uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	Quantity   uint
 	UnitPrice  decimal.Decimal
@@ -17,8 +17,8 @@ type ProjectBatchProductSupplier struct {
 	ProjectID uuid.UUID `gorm:"type:uuid;index;"`
 	Project   Project   `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	BatchProductSupplierID uuid.UUID            `gorm:"type:uuid;index;"`
-	BatchProductSupplier   BatchProductSupplier `gorm:"foreignKey:BatchProductSupplierID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BatchProductID uuid.UUID    `gorm:"type:uuid;index;"`
+	BatchProduct   BatchProduct `gorm:"foreignKey:BatchProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	UserID uuid.UUID `gorm:"type:uuid;index;"`
 	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
@@ -28,6 +28,6 @@ type ProjectBatchProductSupplier struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (ProjectBatchProductSupplier) TableName() string {
-	return "project_batch_product_supplier"
+func (ProjectBatchProduct) TableName() string {
+	return "project_batch_product"
 }

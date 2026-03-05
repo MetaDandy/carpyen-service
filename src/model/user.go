@@ -23,20 +23,20 @@ type User struct {
 	Schedules []Schedule `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Task      []Task     `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	DesignAssigneds        []Design                `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BatchMaterialSuppliers []BatchMaterialSupplier `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BatchProductMaterials  []BatchProductMaterial  `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	BatchProductSuppliers  []BatchProductSupplier  `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ScheduleAssigneds      []Schedule              `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	TaskAssigneds          []Task                  `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Clients                []Client                `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	DesignAssigneds       []Design               `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BatchMaterials        []BatchMaterial        `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BatchProductMaterials []BatchProductMaterial `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	BatchProducts         []BatchProduct         `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ScheduleAssigneds     []Schedule             `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	TaskAssigneds         []Task                 `gorm:"foreignKey:UserAssignerID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Clients               []Client               `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	Materials []Material `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Products  []Product  `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	ProjectBatchMaterialSuppliers []ProjectBatchMaterialSupplier `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ProjectBatchProductMaterials  []ProjectBatchProductMaterial  `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ProjectBatchProductSuppliers  []ProjectBatchProductSupplier  `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchMaterials        []ProjectBatchMaterial        `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchProductMaterials []ProjectBatchProductMaterial `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ProjectBatchProducts         []ProjectBatchProduct         `gorm:"foreignKey:ProjectID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

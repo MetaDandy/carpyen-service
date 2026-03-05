@@ -18,6 +18,9 @@ type BatchProductMaterial struct {
 	ProductID uuid.UUID `gorm:"type:uuid;"`
 	Product   Product   `gorm:"foreignKey:ProductID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
+	WarehouseID uuid.UUID `gorm:"type:uuid;"`
+	Warehouse   Warehouse `gorm:"foreignKey:WarehouseID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
