@@ -1,6 +1,8 @@
 package user
 
 import (
+	"fmt"
+
 	"github.com/MetaDandy/carpyen-service/helper"
 	"github.com/MetaDandy/carpyen-service/middleware"
 	"github.com/MetaDandy/carpyen-service/src/enum"
@@ -87,7 +89,19 @@ func (h *handler) Login(c *fiber.Ctx) error {
 		Path:     "/",
 	})
 
-	// Retornar solo datos del usuario (sin tokens sensibles)
+	// Cookie con info de expiración (sin httpOnly para que sea legible desde JS)
+	// Contiene timestamp Unix en segundos de cuando caduca el access token
+	c.Cookie(&fiber.Cookie{
+		Name:     "tokenExpiry",
+		Value:    fmt.Sprintf("%d", tokenPair.AccessExpire),
+		HTTPOnly: false, // Permitir lectura desde JavaScript
+		Secure:   false, // Cambiar a true en producción con HTTPS
+		SameSite: "Strict",
+		MaxAge:   3600, // Mismo tiempo que el access token
+		Path:     "/",
+	})
+
+	// Retornar solo datos del usuario (tokens están en cookies)
 	return c.Status(fiber.StatusOK).JSON(user)
 }
 
@@ -107,6 +121,17 @@ func (h *handler) Logout(c *fiber.Ctx) error {
 		Name:     "refreshToken",
 		Value:    "",
 		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Strict",
+		MaxAge:   -1,
+		Path:     "/",
+	})
+
+	// Eliminar cookie de expiración
+	c.Cookie(&fiber.Cookie{
+		Name:     "tokenExpiry",
+		Value:    "",
+		HTTPOnly: false,
 		Secure:   false,
 		SameSite: "Strict",
 		MaxAge:   -1,
@@ -139,7 +164,7 @@ func (h *handler) RefreshToken(c *fiber.Ctx) error {
 	role := claims["role"].(string)
 
 	// Generar NUEVO access token
-	newAccessToken, err := helper.GenerateJwt(userID, email, role)
+	newAccessToken, expireTime, err := helper.GenerateAccessToken(userID, email, role)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Could not generate token")
 	}
@@ -149,6 +174,17 @@ func (h *handler) RefreshToken(c *fiber.Ctx) error {
 		Name:     "accessToken",
 		Value:    newAccessToken,
 		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "Strict",
+		MaxAge:   3600, // 1 hora
+		Path:     "/",
+	})
+
+	// Actualizar cookie de expiración
+	c.Cookie(&fiber.Cookie{
+		Name:     "tokenExpiry",
+		Value:    fmt.Sprintf("%d", expireTime),
+		HTTPOnly: false, // Permitir lectura desde JavaScript
 		Secure:   false,
 		SameSite: "Strict",
 		MaxAge:   3600, // 1 hora
