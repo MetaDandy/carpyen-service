@@ -5,20 +5,20 @@ import (
 	"github.com/google/uuid"
 )
 
-type BatchProductSupplier struct {
+type BatchProduct struct {
 	ID         string `json:"id"`
 	Quantity   string `json:"quantity"`
 	UnitPrice  string `json:"unit_price"`
 	TotalPrice string `json:"total_cost"`
 	Stock      string `json:"stock"`
 
-	Product  *Product  `json:"product"`
-	Supplier *Supplier `json:"supplier"`
-	User     *User     `json:"user,omitzero"`
+	Product   *Product   `json:"product"`
+	Warehouse *Warehouse `json:"warehouse"`
+	User      *User      `json:"user,omitzero"`
 }
 
-func BatchProductSupplierToDto(m *model.BatchProductSupplier) BatchProductSupplier {
-	dto := BatchProductSupplier{
+func BatchProductToDto(m *model.BatchProduct) BatchProduct {
+	dto := BatchProduct{
 		ID:         m.ID.String(),
 		Quantity:   m.Quantity.String(),
 		UnitPrice:  m.UnitPrice.String(),
@@ -31,9 +31,9 @@ func BatchProductSupplierToDto(m *model.BatchProductSupplier) BatchProductSuppli
 		dto.Product = &mat
 	}
 
-	if m.Supplier.ID != (uuid.UUID{}) {
-		sup := SupplierToDto(&m.Supplier)
-		dto.Supplier = &sup
+	if m.Warehouse.ID != (uuid.UUID{}) {
+		warehouse := WarehouseToDto(&m.Warehouse)
+		dto.Warehouse = &warehouse
 	}
 
 	if m.User.ID != (uuid.UUID{}) {
@@ -44,10 +44,10 @@ func BatchProductSupplierToDto(m *model.BatchProductSupplier) BatchProductSuppli
 	return dto
 }
 
-func BatchProductSupplierToListDto(m []model.BatchProductSupplier) []BatchProductSupplier {
-	out := make([]BatchProductSupplier, len(m))
+func BatchProductToListDto(m []model.BatchProduct) []BatchProduct {
+	out := make([]BatchProduct, len(m))
 	for i, item := range m {
-		out[i] = BatchProductSupplierToDto(&item)
+		out[i] = BatchProductToDto(&item)
 	}
 	return out
 }

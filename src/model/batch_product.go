@@ -33,5 +33,5 @@ type BatchProduct struct {
 }
 
 func (BatchProduct) TableName() string {
-	return "batch_product_supplier"
+	return "batch_product"
 }

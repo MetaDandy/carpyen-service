@@ -6,28 +6,30 @@ import (
 	extrainformation "github.com/MetaDandy/carpyen-service/src/core/extra-information"
 	"github.com/MetaDandy/carpyen-service/src/core/user"
 
-	batchmaterialsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_material_supplier"
+	batchmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_material"
+	batchproduct "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product"
 	batchproductmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_material"
-	batchproductsupplier "github.com/MetaDandy/carpyen-service/src/modules/inventory/batch_product_supplier"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/product"
 	productmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/product_material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/supplier"
+	"github.com/MetaDandy/carpyen-service/src/modules/inventory/warehouse"
 	"github.com/MetaDandy/carpyen-service/src/modules/projects/project"
 )
 
 type Container struct {
-	User                  user.Handler
-	Client                client.Handler
-	Supplier              supplier.Handler
-	Material              material.Handler
-	Product               product.Handler
-	BatchMaterialSupplier batchmaterialsupplier.Handler
-	BatchProductSupplier  batchproductsupplier.Handler
-	BPM                   batchproductmaterial.Handler
-	PM                    productmaterial.Handler
-	Project               project.Handler
-	ExtraInformation      extrainformation.Handler
+	User             user.Handler
+	Client           client.Handler
+	Supplier         supplier.Handler
+	Material         material.Handler
+	Product          product.Handler
+	BatchMaterial    batchmaterial.Handler
+	BatchProduct     batchproduct.Handler
+	BPM              batchproductmaterial.Handler
+	PM               productmaterial.Handler
+	Project          project.Handler
+	ExtraInformation extrainformation.Handler
+	Warehouse        warehouse.Handler
 }
 
 func SetupContainer() *Container {
@@ -51,16 +53,20 @@ func SetupContainer() *Container {
 	productService := product.NewService(productRepo, userRepo)
 	productHandler := product.NewProductHandler(productService)
 
-	batchMaterialSupplierRepo := batchmaterialsupplier.NewRepo(config.DB)
-	batchMaterialSupplierService := batchmaterialsupplier.NewService(batchMaterialSupplierRepo, userRepo, materialRepo, supplierRepo)
-	batchMaterialSupplierHandler := batchmaterialsupplier.NewBatchMaterialSupplierHandler(batchMaterialSupplierService)
+	warehouseRepo := warehouse.NewRepo(config.DB)
+	warehouseService := warehouse.NewService(warehouseRepo, userRepo)
+	warehouseHandler := warehouse.NewWarehouseHandler(warehouseService)
 
-	batchProductSupplierRepo := batchproductsupplier.NewRepo(config.DB)
-	batchProductSupplierService := batchproductsupplier.NewService(batchProductSupplierRepo, userRepo, productRepo, supplierRepo)
-	batchProductSupplierHandler := batchproductsupplier.NewBatchProductSupplierHandler(batchProductSupplierService)
+	batchMaterialRepo := batchmaterial.NewRepo(config.DB)
+	batchMaterialService := batchmaterial.NewService(batchMaterialRepo, userRepo, materialRepo, warehouseRepo)
+	batchMaterialHandler := batchmaterial.NewBatchMaterialHandler(batchMaterialService)
+
+	batchProductRepo := batchproduct.NewRepo(config.DB)
+	batchProductService := batchproduct.NewService(batchProductRepo, userRepo, productRepo, warehouseRepo)
+	batchProductHandler := batchproduct.NewBatchProductHandler(batchProductService)
 
 	bpmRepo := batchproductmaterial.NewRepo(config.DB)
-	bpmService := batchproductmaterial.NewService(bpmRepo, userRepo, productRepo)
+	bpmService := batchproductmaterial.NewService(bpmRepo, userRepo, productRepo, warehouseRepo)
 	bpmHandler := batchproductmaterial.NewBatchProductMaterialHandler(bpmService)
 
 	pmRepo := productmaterial.NewRepo(config.DB)
@@ -72,16 +78,17 @@ func SetupContainer() *Container {
 	projectHandler := project.NewProjectHandler(projectService)
 
 	return &Container{
-		User:                  userHandler,
-		Client:                clientHandler,
-		Supplier:              supplierHandler,
-		Material:              materialHandler,
-		Product:               productHandler,
-		BatchMaterialSupplier: batchMaterialSupplierHandler,
-		BatchProductSupplier:  batchProductSupplierHandler,
-		BPM:                   bpmHandler,
-		PM:                    pmHandler,
-		Project:               projectHandler,
-		ExtraInformation:      extrainformation.NewExtraInformationHandler(),
+		User:             userHandler,
+		Client:           clientHandler,
+		Supplier:         supplierHandler,
+		Material:         materialHandler,
+		Product:          productHandler,
+		BatchMaterial:    batchMaterialHandler,
+		BatchProduct:     batchProductHandler,
+		BPM:              bpmHandler,
+		PM:               pmHandler,
+		Project:          projectHandler,
+		ExtraInformation: extrainformation.NewExtraInformationHandler(),
+		Warehouse:        warehouseHandler,
 	}
 }

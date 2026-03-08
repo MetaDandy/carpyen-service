@@ -9,9 +9,10 @@ type BatchProductMaterial struct {
 	TotalCost string `json:"total_cost"`
 	Stock     string `json:"stock"`
 
-	Product Product           `json:"product"`
-	User    User              `json:"user"`
-	PM      []ProductMaterial `json:"product_material"`
+	Product   Product           `json:"product"`
+	Warehouse Warehouse         `json:"warehouse"`
+	User      User              `json:"user"`
+	PM        []ProductMaterial `json:"product_material"`
 
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
@@ -25,9 +26,10 @@ func BatchProductMaterialToDto(bpm *model.BatchProductMaterial) BatchProductMate
 		TotalCost: bpm.TotalCost.String(),
 		Stock:     bpm.Stock.String(),
 
-		Product: ProductToDto(&bpm.Product),
-		User:    UserToDto(&bpm.User),
-		PM:      ProductMaterialToListDto(bpm.ProductMaterials),
+		Product:   ProductToDto(&bpm.Product),
+		Warehouse: WarehouseToDto(&bpm.Warehouse),
+		User:      UserToDto(&bpm.User),
+		PM:        ProductMaterialToListDto(bpm.ProductMaterials),
 
 		CreatedAt: bpm.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: bpm.UpdatedAt.Format("2006-01-02 15:04:05"),

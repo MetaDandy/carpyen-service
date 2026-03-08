@@ -33,5 +33,5 @@ type BatchMaterial struct {
 }
 
 func (BatchMaterial) TableName() string {
-	return "batch_material_supplier"
+	return "batch_material"
 }

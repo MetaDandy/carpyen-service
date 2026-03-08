@@ -1,4 +1,4 @@
-package batchmaterialsupplier
+package batchproduct
 
 import (
 	"github.com/MetaDandy/carpyen-service/helper"
@@ -20,20 +20,20 @@ type handler struct {
 	service Service
 }
 
-func NewBatchMaterialSupplierHandler(service Service) Handler {
+func NewBatchProductHandler(service Service) Handler {
 	return &handler{service: service}
 }
 
 func (h *handler) RegisterRoutes(router fiber.Router) {
-	batch_material_suppliers := router.Group("/batch_material_suppliers")
+	batch_products := router.Group("/batch_products")
 
-	batch_material_suppliers.Use(middleware.Jwt())
+	batch_products.Use(middleware.Jwt())
 
-	batch_material_suppliers.Post("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.create)
-	batch_material_suppliers.Get("/", h.findAll)
-	batch_material_suppliers.Get("/:id", h.findByID)
-	batch_material_suppliers.Patch("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.update)
-	batch_material_suppliers.Delete("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller}), h.softDelete)
+	batch_products.Post("/", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.create)
+	batch_products.Get("/", h.findAll)
+	batch_products.Get("/:id", h.findByID)
+	batch_products.Patch("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleInstaller, enum.RoleChiefInstaller}), h.update)
+	batch_products.Delete("/:id", middleware.RequireRole([]enum.Role{enum.RoleAdmin, enum.RoleChiefInstaller}), h.softDelete)
 }
 
 func (h *handler) create(c *fiber.Ctx) error {
@@ -45,7 +45,7 @@ func (h *handler) create(c *fiber.Ctx) error {
 	user_id := c.Locals("user_id").(string)
 
 	if err := h.service.Create(input, user_id); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create the batch material supplier")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create the batch product ")
 	}
 
 	return c.SendStatus(fiber.StatusCreated)
@@ -55,12 +55,12 @@ func (h *handler) create(c *fiber.Ctx) error {
 func (h *handler) findByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	batchmaterialsupplier, err := h.service.FindByID(id)
+	batchproduct, err := h.service.FindByID(id)
 	if err != nil {
-		return fiber.NewError(fiber.StatusNotFound, "Batch material supplier not found")
+		return fiber.NewError(fiber.StatusNotFound, "Batch product not found")
 	}
 
-	return c.JSON(batchmaterialsupplier)
+	return c.JSON(batchproduct)
 }
 
 func (h *handler) findAll(c *fiber.Ctx) error {
@@ -68,7 +68,7 @@ func (h *handler) findAll(c *fiber.Ctx) error {
 
 	finded, err := h.service.FindAll(opts)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve batch material suppliers")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to retrieve batch product s")
 	}
 
 	return c.JSON(finded)
@@ -91,7 +91,7 @@ func (h *handler) update(c *fiber.Ctx) error {
 	}
 
 	if err := h.service.Update(id, input); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update batch material supplier")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update batch product ")
 	}
 
 	return c.SendStatus(fiber.StatusOK)
@@ -110,7 +110,7 @@ func (h *handler) softDelete(c *fiber.Ctx) error {
 	}
 
 	if err := h.service.SoftDelete(id); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete the batch material supplier")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete the batch product ")
 	}
 
 	return c.SendStatus(fiber.StatusOK)
