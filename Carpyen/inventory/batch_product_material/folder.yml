@@ -1,0 +1,7 @@
+info:
+  name: batch_product_material
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

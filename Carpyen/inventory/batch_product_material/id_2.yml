@@ -1,0 +1,19 @@
+info:
+  name: :id_2
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{url}}/batch-product-materials/:id"
+  params:
+    - name: id
+      value: 05909bb1-1fa2-4148-ac4b-da0d2f39c3cd
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

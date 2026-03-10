@@ -1,0 +1,22 @@
+info:
+  name: :id_2
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{url}}/materials/:id"
+  params:
+    - name: id
+      value: 1f42e6c5-1deb-439d-96d3-6817385823d3
+      type: path
+  body:
+    type: text
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,28 @@
+info:
+  name: create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/products"
+  body:
+    type: json
+    data: |
+      {
+        "name": "Silla de Madera Roble",
+        "type": "SILLA",
+        "unit_price": 850.50
+      }
+      // {
+      //   "name": "Estante de Madera Roble",
+      //   "type": "ESTANTE",
+      //   "unit_price": 850.50
+      // }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

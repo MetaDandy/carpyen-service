@@ -13,10 +13,11 @@ type ProductDetails struct {
 	BatchProductID uuid.UUID    `gorm:"type:uuid;index;"`
 	BatchProduct   BatchProduct `gorm:"foreignKey:BatchProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
+	PurchaseID uuid.UUID `gorm:"type:uuid;index;"`
+	Purchase   Purchase  `gorm:"foreignKey:PurchaseID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+
 	UserID uuid.UUID `gorm:"type:uuid;"`
 	User   User      `gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-
-	Purchase []Purchase `gorm:"foreignKey:ProductDetailsID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

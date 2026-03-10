@@ -1,0 +1,32 @@
+info:
+  name: create
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{url}}/clients"
+  body:
+    type: json
+    data: "{\r
+
+      \  \"name\": \"Juan de los Palotes García\",\r
+
+      \  \"email\": \"juan.palo@gmail.com\",\r
+
+      \  \"phone\": \"+591 77543456\",\r
+
+      \  \"address\": \"Avenida Banzer 450, Equipetrol, Santa Cruz\",\r
+
+      \  \"password\": \"cliente123\",\r
+
+      \  \"confirm_password\": \"cliente123\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

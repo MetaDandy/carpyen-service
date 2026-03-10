@@ -1,0 +1,30 @@
+info:
+  name: /
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/suppliers"
+  body:
+    type: json
+    data: |-
+      {
+          "name": "supplier de prueba",
+          "contact": "cosas",
+          "phone": "123456",
+          "email": "supplier@gmail.com",
+          "address": "una casa"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: url
+      value: http://127.0.0.1:8000/api/v1
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

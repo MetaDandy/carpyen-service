@@ -1,0 +1,23 @@
+info:
+  name: /
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/product-materials"
+  body:
+    type: json
+    data: |-
+      {
+          "quantity": "5",
+          "batch_product_material_id": "db218b70-0699-47a8-9f25-0ceb505ff57b",
+          "material_id": "1f0d7b65-6787-44dd-87b4-8f3692f94acc"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

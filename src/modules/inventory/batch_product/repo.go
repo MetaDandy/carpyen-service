@@ -28,7 +28,7 @@ func (r *repo) create(m model.BatchProduct) error {
 }
 func (r *repo) findByID(id string) (model.BatchProduct, error) {
 	var batchProduct model.BatchProduct
-	err := r.db.Preload("User").Preload("Product").Preload("Supplier").First(&batchProduct, "id = ?", id).Error
+	err := r.db.Preload("User").Preload("Product").Preload("Warehouse").First(&batchProduct, "id = ?", id).Error
 	return batchProduct, err
 }
 
@@ -39,7 +39,7 @@ func (r *repo) findAll(opts *helper.FindAllOptions) ([]model.BatchProduct, int64
 	var total int64
 	query, total = opts.ApplyFindAllOptions(query)
 
-	err := query.Preload("Supplier").Preload("Product").Find(&finded).Error
+	err := query.Preload("Warehouse").Preload("Product").Find(&finded).Error
 	return finded, total, err
 }
 

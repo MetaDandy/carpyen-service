@@ -1,0 +1,28 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/materials/:id"
+  params:
+    - name: id
+      value: d05dcda2-0234-4cd3-b7b4-b0da65f64763
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \    //\"name\": \"Tablón de madera roble\"\r
+
+      \    \"unit_measure\": \"METRO_CUADRADO\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

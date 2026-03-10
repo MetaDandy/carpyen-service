@@ -12,6 +12,7 @@ import (
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/material"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/product"
 	productmaterial "github.com/MetaDandy/carpyen-service/src/modules/inventory/product_material"
+	"github.com/MetaDandy/carpyen-service/src/modules/inventory/purchase"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/supplier"
 	"github.com/MetaDandy/carpyen-service/src/modules/inventory/warehouse"
 	"github.com/MetaDandy/carpyen-service/src/modules/projects/project"
@@ -30,6 +31,7 @@ type Container struct {
 	Project          project.Handler
 	ExtraInformation extrainformation.Handler
 	Warehouse        warehouse.Handler
+	Purchase         purchase.Handler
 }
 
 func SetupContainer() *Container {
@@ -77,6 +79,10 @@ func SetupContainer() *Container {
 	projectService := project.NewService(projectRepo, userRepo, clientRepo)
 	projectHandler := project.NewProjectHandler(projectService)
 
+	purchaseRepo := purchase.NewRepo(config.DB)
+	purchaseService := purchase.NewService(purchaseRepo, userRepo, supplierRepo)
+	purchaseHandler := purchase.NewPurchaseHandler(purchaseService)
+
 	return &Container{
 		User:             userHandler,
 		Client:           clientHandler,
@@ -90,5 +96,6 @@ func SetupContainer() *Container {
 		Project:          projectHandler,
 		ExtraInformation: extrainformation.NewExtraInformationHandler(),
 		Warehouse:        warehouseHandler,
+		Purchase:         purchaseHandler,
 	}
 }

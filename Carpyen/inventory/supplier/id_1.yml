@@ -1,0 +1,25 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/suppliers/:id"
+  params:
+    - name: id
+      value: cca99633-d0a7-4942-abb1-42e7293fd2b5
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+          "contact": "cosas editadas"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,32 @@
+info:
+  name: id:_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/batch_product_suppliers/:id"
+  params:
+    - name: id
+      value: ef913015-f837-4e28-b694-ffb45e8c6a99
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \  \"unit_price\": \"500\",\r
+
+      \  \"quantity\": \"145\",\r
+
+      \   \"product_id\": \"2f94eacc-9b46-4bfc-9e67-468847674608\",\r
+
+      \     \"supplier_id\":\"3971f72a-4335-4491-b7dc-32eae6b5047f\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

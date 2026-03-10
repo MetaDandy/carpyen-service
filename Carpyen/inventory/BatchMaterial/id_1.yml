@@ -1,0 +1,32 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/batch_material_suppliers/:id"
+  params:
+    - name: id
+      value: 56ed67ae-2aa6-413a-ba06-702bf60224fb
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \  \"unit_price\": \"500\",\r
+
+      \  \"quantity\": \"35\",\r
+
+      \    \"material_id\": \"90861509-7efd-48d2-8090-c8b246adbd99\",\r
+
+      \     \"supplier_id\":\"3971f72a-4335-4491-b7dc-32eae6b5047f\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

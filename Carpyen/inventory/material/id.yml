@@ -1,0 +1,22 @@
+info:
+  name: :id
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{url}}/materials/:id"
+  params:
+    - name: id
+      value: d05dcda2-0234-4cd3-b7b4-b0da65f64763
+      type: path
+  body:
+    type: json
+    data: "{\r\n   \r\n}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

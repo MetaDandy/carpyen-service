@@ -1,0 +1,23 @@
+info:
+  name: create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/purchase/"
+  body:
+    type: json
+    data: |-
+      {
+        "date" : "02/02/2024",
+        "receipt_number": "1550",
+        "supplier_id" : "8ccd2ae8-1379-4229-9392-64f1998df90b"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

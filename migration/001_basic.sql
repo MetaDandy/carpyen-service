@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS batch_material (
     quantity NUMERIC(19, 4),
     unit_price NUMERIC(19, 4),
     total_cost NUMERIC(19, 4),
-    stock NUMERIC(19, 4) DEFAULT 0,,
+    stock NUMERIC(19, 4) DEFAULT 0,
     material_id UUID NOT NULL,
     warehouse_id UUID NOT NULL,
     user_id UUID NOT NULL,
@@ -419,67 +419,67 @@ CREATE INDEX IF NOT EXISTS idx_project_batch_product_material_batch_product_mate
 CREATE INDEX IF NOT EXISTS idx_project_batch_product_material_user_id ON project_batch_product_material(user_id);
 CREATE INDEX IF NOT EXISTS idx_project_batch_product_material_deleted_at ON project_batch_product_material(deleted_at);
 
+-- Purchase Table
+CREATE TABLE IF NOT EXISTS purchase (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    date TIMESTAMP,
+    receipt_number VARCHAR(255),
+    supplier_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_purchase_deleted_at ON purchase(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_purchase_supplier_id ON purchase(supplier_id);
+CREATE INDEX IF NOT EXISTS idx_purchase_user_id ON purchase(user_id);
+
 -- MaterialDetails Table
 CREATE TABLE IF NOT EXISTS material_details (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     batch_material_id UUID NOT NULL,
+    purchase_id UUID,
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
     FOREIGN KEY (batch_material_id) REFERENCES batch_material(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchase(id) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_material_details_deleted_at ON material_details(deleted_at);
 CREATE INDEX IF NOT EXISTS idx_material_details_batch_material_id ON material_details(batch_material_id);
+CREATE INDEX IF NOT EXISTS idx_material_details_purchase_id ON material_details(purchase_id);
 CREATE INDEX IF NOT EXISTS idx_material_details_user_id ON material_details(user_id);
 
 -- ProductDetails Table
 CREATE TABLE IF NOT EXISTS product_details (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     batch_product_id UUID NOT NULL,
+    purchase_id UUID,
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
     FOREIGN KEY (batch_product_id) REFERENCES batch_product(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchase(id) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_product_details_deleted_at ON product_details(deleted_at);
 CREATE INDEX IF NOT EXISTS idx_product_details_batch_product_id ON product_details(batch_product_id);
+CREATE INDEX IF NOT EXISTS idx_product_details_purchase_id ON product_details(purchase_id);
 CREATE INDEX IF NOT EXISTS idx_product_details_user_id ON product_details(user_id);
-
--- Purchase Table
-CREATE TABLE IF NOT EXISTS purchase (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    date TIMESTAMP,
-    receipt_number VARCHAR(255),
-    material_details_id UUID NOT NULL,
-    product_details_id UUID NOT NULL,
-    supplier_id UUID NOT NULL,
-    user_id UUID NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP,
-    FOREIGN KEY (material_details_id) REFERENCES material_details(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (product_details_id) REFERENCES product_details(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (supplier_id) REFERENCES supplier(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_purchase_deleted_at ON purchase(deleted_at);
-CREATE INDEX IF NOT EXISTS idx_purchase_material_details_id ON purchase(material_details_id);
-CREATE INDEX IF NOT EXISTS idx_purchase_product_details_id ON purchase(product_details_id);
-CREATE INDEX IF NOT EXISTS idx_purchase_supplier_id ON purchase(supplier_id);
-CREATE INDEX IF NOT EXISTS idx_purchase_user_id ON purchase(user_id);
 
 -- +goose Down
 
-DROP TABLE IF EXISTS purchase CASCADE;
 DROP TABLE IF EXISTS product_details CASCADE;
 DROP TABLE IF EXISTS material_details CASCADE;
+DROP TABLE IF EXISTS purchase CASCADE;
 DROP TABLE IF EXISTS project_batch_product_material CASCADE;
 DROP TABLE IF EXISTS project_batch_product CASCADE;
 DROP TABLE IF EXISTS project_batch_material CASCADE;

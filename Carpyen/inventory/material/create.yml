@@ -1,0 +1,30 @@
+info:
+  name: create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/materials"
+  body:
+    type: json
+    data: |
+      /*{
+        "name": "Tablón de madera pino",
+        "type": "MADERA",
+        "unit_measure": "UNIDAD",
+        "unit_price": 85.0
+      }*/
+      {
+        "name": "palo de madera de construcción",
+        "type": "MADERA",
+        "unit_measure": "UNIDAD",
+        "unit_price": 55.0
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

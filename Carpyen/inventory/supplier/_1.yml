@@ -1,0 +1,22 @@
+info:
+  name: /_1
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{url}}/suppliers?limit=10&offset=0"
+  params:
+    - name: limit
+      value: "10"
+      type: query
+    - name: offset
+      value: "0"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

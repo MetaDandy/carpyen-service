@@ -1,0 +1,28 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/products/:id"
+  params:
+    - name: id
+      value: c50b67a6-16ff-45ea-b750-32d99ea938c6
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \    \"name\": \"Silla de Madera Trucha\"\r
+
+      \    //\"type\": \"MESA\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

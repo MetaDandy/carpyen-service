@@ -1,0 +1,36 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/projects/:id"
+  params:
+    - name: id
+      value: 2530f82f-e36a-45c6-be3b-53596231741f
+      type: path
+  body:
+    type: json
+    data: "{\r
+
+      \  \"name\": \"proyecto prueba 23\",\r
+
+      \  \"description\": \"cosas nuevas\",\r
+
+      \  \"location\": \"Warnes\",\r
+
+      \  \"client_id\":\"db627570-0ff5-4939-b114-2327f4a29bc8\",\r
+
+      \  \"state\": \"ACTIVE\"\r
+
+      \r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

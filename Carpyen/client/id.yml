@@ -1,0 +1,28 @@
+info:
+  name: :id
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{url}}/clients/:id"
+  params:
+    - name: id
+      value: f4c3b86f-d2d3-43fd-a8d3-2c0c24708abb
+      type: path
+  body:
+    type: text
+    data: "{\r
+
+      \    \"address\": \"Avenida plan 3000, plan 3000, Santa Cruz\"\r
+
+      \r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

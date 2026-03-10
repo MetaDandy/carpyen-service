@@ -1,0 +1,31 @@
+info:
+  name: :id
+  type: http
+  seq: 2
+
+http:
+  method: PATCH
+  url: "{{url}}/product-materials/:id"
+  params:
+    - name: ""
+      value: ""
+      type: query
+      disabled: true
+    - name: id
+      value: 4dc32e6e-7eeb-41da-8b9d-f3d8c723282a
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+          // "quantity": "8"
+          "material_id": "a92cb695-29d2-49b8-b995-2c143333af0f"
+          // "unit_price": "85"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

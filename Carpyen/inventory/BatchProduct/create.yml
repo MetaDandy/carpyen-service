@@ -1,0 +1,34 @@
+info:
+  name: create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/batch_products"
+  body:
+    type: json
+    data: |
+      /*/ juan contreras trajo sillas modernas
+      {
+        "unit_price": "150.50",
+        "quantity": "100",
+         "product_id": "9b750efc-a9f6-49a1-8ffe-a26d5d5501c9",
+         "supplier_id":"83c95892-a2fe-417b-877e-77c61caebe13"
+      }//*/
+
+
+      //Karla Smith ttajo Mesa
+      {
+        "unit_price": "550",
+        "quantity": "50",
+         "product_id": "a006c00e-7912-4f8f-92ab-2eaa28fbc6b9",
+         "warehouse_id":"1b62ea27-8d0b-465d-852f-6e974729ad32"
+      }//*/
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

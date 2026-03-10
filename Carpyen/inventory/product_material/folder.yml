@@ -1,0 +1,7 @@
+info:
+  name: product_material
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit

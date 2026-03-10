@@ -1,0 +1,60 @@
+info:
+  name: login
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/users/login/"
+  body:
+    type: json
+    data: |-
+      //admin
+      { 
+          "email": "admin@carpyen.com",
+          "password": "admin123"
+      }///
+
+      /*/designer
+      { 
+          "email":    "carlos.designer@carpyen.com",
+          "password" : "designer123"
+      }//*/
+
+      /*/chiefInstaller
+      {
+         "email":    "juan.chief@carpyen.com",
+          "password" : "chief123" 
+      }//*/
+
+      /*/installer
+      {
+          "email":    "maria.installer@carpyen.com",
+          "password" : "installer123" 
+      }
+      //*/
+
+      /*//seller
+      {
+           "email":    "miguel.seller@carpyen.com",
+          "password" : "seller123" 
+      }//*/
+  auth: inherit
+
+runtime:
+  variables:
+    - name: url
+      value: http://127.0.0.1:8000/api/v1
+  scripts:
+    - type: after-response
+      code: "// Guarda el token de la respuesta en una variable de entorno\r
+
+        let json = res.getBody();\r
+
+        bru.setEnvVar(\"authToken\", json.token);"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

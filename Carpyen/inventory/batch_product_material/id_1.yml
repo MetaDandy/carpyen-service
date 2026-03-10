@@ -1,0 +1,27 @@
+info:
+  name: :id_1
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{url}}/batch-product-materials/:id"
+  params:
+    - name: id
+      value: db218b70-0699-47a8-9f25-0ceb505ff57b
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+          "quantity": "55"
+          //   "product_id": "33063042-9fb2-47e2-8471-d57b968714da"
+          //   "unit_price": "50"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

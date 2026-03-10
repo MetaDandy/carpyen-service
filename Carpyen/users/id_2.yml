@@ -1,0 +1,19 @@
+info:
+  name: :id_2
+  type: http
+  seq: 8
+
+http:
+  method: DELETE
+  url: "{{url}}/users/:id"
+  params:
+    - name: id
+      value: 97b51009-57f9-4e11-bf6a-a10acdb606b7
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

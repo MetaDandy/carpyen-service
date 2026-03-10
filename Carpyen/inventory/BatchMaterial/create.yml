@@ -1,0 +1,32 @@
+info:
+  name: create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{url}}/batch_materials"
+  body:
+    type: json
+    data: |
+      // juan contreras trajo madera roble
+      /*/{
+        "unit_price": "12.50",
+        "quantity": "100",
+         "material_id": "1f0d7b65-6787-44dd-87b4-8f3692f94acc",
+         "supplier_id":"83c95892-a2fe-417b-877e-77c61caebe13"
+      }//*/
+      //Karla Smith ttajo Madera Pino
+      {
+        "unit_price": "50",
+        "quantity": "50",
+         "material_id": "9ccd87bd-a29f-4590-80e3-f76874a3371b",
+         "warehouse_id":"1b62ea27-8d0b-465d-852f-6e974729ad32"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
